@@ -163,7 +163,7 @@ else:
 
 # Protect against returning an enormous number of completions which the frontend
 # may have trouble processing.
-MATCHES_LIMIT = 500
+MATCHES_LIMIT = 999
 
 _deprecation_readline_sentinel = object()
 
@@ -1546,8 +1546,9 @@ class IPCompleter(Completer):
                 return method()
 
             # Special case some common in-memory dict-like types
-            if isinstance(obj, dict) or\
-               _safe_isinstance(obj, 'pandas', 'DataFrame'):
+            # if isinstance(obj, dict) or\
+               # _safe_isinstance(obj, 'pandas', 'DataFrame'):
+            if hasattr(obj,'keys'):
                 try:
                     return list(obj.keys())
                 except Exception:
