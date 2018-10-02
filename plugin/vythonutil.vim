@@ -14,12 +14,6 @@ import tkinter
 from tkinter import filedialog
 from importlib import reload
 
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
-
-#on Windows, this is needed for qt stuff like pyplot
-os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = sys.exec_prefix.replace('\\','/') + '/Library/plugins/platforms'
-
 
 try:
     import cv2

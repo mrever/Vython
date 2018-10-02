@@ -32,9 +32,15 @@ import os
 import re
 import threading
 
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 sys.argv = ['']
 sys.path.append('.') #might be needed to import from current directory
 sys.path.append(os.environ['PYPLUGPATH']) # might be needed to import from plugin directory
+#on Windows, this is needed for qt stuff like pyplot
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = sys.exec_prefix.replace('\\','/') + '/Library/plugins/platforms'
+
 
 class outputter():
     def __init__(self):
