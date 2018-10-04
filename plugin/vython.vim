@@ -60,7 +60,7 @@ class outputter():
             thiswin = vim.current.window
             thiswin = vim.current.window
             for win in vim.current.tabpage.windows:
-                if 'pythonbuff' in str(win.buffer):
+                if 'pythonbuff' in win.buffer.name:
                     vim.current.window = win
                     vim.command('normal G' + str(numlines-3)+'kV' +str(numlines-5)+'jzf')
             vim.current.window = thiswin
@@ -120,7 +120,7 @@ class outputter():
     def scrollbuffend(self):
         thiswin = vim.current.window
         for win in vim.current.tabpage.windows:
-            if 'pythonbuff' in str(win.buffer):
+            if 'pythonbuff' in win.buffer.name:
                 vim.current.window = win
                 vim.command('normal G')
         vim.current.window = thiswin
