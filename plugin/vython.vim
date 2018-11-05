@@ -72,12 +72,16 @@ class outputter():
 
 
     def mprint(self, *args, **kwargs):
+        if 'sep' in kwargs.keys():
+            sep = kwargs['sep']
+        else:
+            sep = ' '
         newlinecount = self.linecount-1
         outstr = ''
         for a in args:
-            outstr += str(a) + ' '
+            outstr += str(a) + sep
         if outstr:
-            outstr = outstr[:-1]
+            outstr = outstr[:-len(sep)]
         if newlinecount != self.oldlinecount:
             self.pybuf.append('') 
             self.pybuf.append('Out [' + str(newlinecount) + ']:') 
