@@ -103,23 +103,24 @@ class outputter():
 
     def printexp(self):
         self.pybuf.append('') 
-        thisline = vim.eval("@p").strip()
-        thisexp = thisline.split('=')[0].replace('\n','')
-        try:
-            if thisexp[-1] in '+-*/':
-                thisexp = thisexp[:-1]
-                if thisexp[-1] == '*':
-                    thisexp = thisexp[:-1]
-            expout = thisexp.strip() + ' = ' + repr(eval(thisexp))
-            [self.pybuf.append(exp) for exp in expout.split('\n')] 
-        except:
+        lines = vim.eval("@p").strip().split('\n')
+        for thisline in lines:
+            thisexp = thisline.split('=')[0]
             try:
-                thisexp = thisline.replace('\n','')
-                expout = thisexp + ' = ' + repr(eval(thisexp))
+                if thisexp[-1] in '+-*/':
+                    thisexp = thisexp[:-1]
+                    if thisexp[-1] == '*':
+                        thisexp = thisexp[:-1]
+                expout = thisexp.strip() + ' = ' + repr(eval(thisexp))
                 [self.pybuf.append(exp) for exp in expout.split('\n')] 
             except:
-                [self.pybuf.append(thisexp.split('=')[0].strip() + " is not defined.")] 
-        self.scrollbuffend()
+                try:
+                    thisexp = thisline.replace('\n','')
+                    expout = thisexp + ' = ' + repr(eval(thisexp))
+                    [self.pybuf.append(exp) for exp in expout.split('\n')] 
+                except:
+                    [self.pybuf.append(thisexp.split('=')[0].strip() + " is not defined.")] 
+            self.scrollbuffend()
 
     def scrollbuffend(self):
         thiswin = vim.current.window
