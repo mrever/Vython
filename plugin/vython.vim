@@ -5,13 +5,13 @@ let $PYPLUGPATH .= expand('<sfile>:p:h') "used to import .py files from plugin d
 command! Vython normal :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr><c-w><c-h>
 nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr><c-w><c-h>
 
-nnoremap <silent> <F5> mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 <c-r>p<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <F5> <esc>mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 <c-r>p<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <F5> mP<esc>ggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 <c-r>p<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <F5> mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <F5> <esc>mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <F5> mP<esc>ggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
-nnoremap <silent> <s-enter> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 <c-r>p<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <s-enter> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 <c-r>p<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <s-enter> mP"py:py3 mout.removeindent()<cr>:py3 mout.output()<cr>:redir @b<cr>:py3 <c-r>p<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <s-enter> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <s-enter> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <s-enter> mP"py:py3 mout.removeindent()<cr>:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
 nnoremap <silent> <c-b> mPV"py:py3 mout.printexp()<cr>`P
 inoremap <silent> <c-b> <esc>mPV"py:py3 mout.printexp()<cr>`Pa
@@ -41,6 +41,13 @@ sys.path.append(os.environ['PYPLUGPATH']) # might be needed to import from plugi
 #on Windows, this is needed for qt stuff like pyplot
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = sys.exec_prefix.replace('\\','/') + '/Library/plugins/platforms'
 
+def filtcode():
+    code = [q for q in vim.eval("@p").split('\n') if len(q)>0]
+    if 'fconv' in globals():
+        code = [q if q.strip()[0]!='!' else fconv(q) for q in code]
+    else:
+        code = [q for q in code if q.strip()[0]!='!']
+    return '\n'.join(code)
 
 class outputter():
     def __init__(self):
