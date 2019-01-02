@@ -32,7 +32,7 @@ def pwd(display=True):
     return d
 
 fis = glob.glob('*')
-dirs = [pwd()]
+dirs = [pwd(display=False)]
 def cd(cdir='.'):
     if not cdir:
         cdir = '.'
@@ -82,7 +82,6 @@ def rm(*args):
         print('Failure: rm ' + ostr)
     print()
 
-
 def call(*args, display=True):
     ret = subprocess.check_output(*args).decode()
     if display:
@@ -100,7 +99,11 @@ def fconv(cmd, replace=False, disp=False):
     if command in ['cd', 'pwd', 'cp', 'mv', 'rm', 'ln']: 
         rstr = command + "(" + ','.join(["'"+s+"'" if s[0]!='$' else s[1:] for s in string[1:]]) + ")"
     else:
-        rstr = "call([" + ','.join(["'"+s+"'" if s[0]!='$' else s[1:] for s in string]) + "])"
+        if '>' in string:
+            rstr = ' '.join([s if s[0]!='$' else s[1:] for s in string])
+            rstr = "os.system('" + rstr + "')"
+        else:
+            rstr = "call([" + ','.join(["'"+s+"'" if s[0]!='$' else s[1:] for s in string]) + "])"
     rstr = ' '*numspaces + rstr
     if replace:
         vim.current.line = rstr
