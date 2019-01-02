@@ -11,7 +11,8 @@ vnoremap <silent> <F5> mP<esc>ggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exe
 
 nnoremap <silent> <s-enter> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <s-enter> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <s-enter> mP"py:py3 mout.removeindent()<cr>:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"vnoremap <silent> <s-enter> mP"py:py3 mout.removeindent()<cr>:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+vnoremap <silent> <s-enter> mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
 nnoremap <silent> <c-b> mPV"py:py3 mout.printexp()<cr>`P
 inoremap <silent> <c-b> <esc>mPV"py:py3 mout.printexp()<cr>`Pa
@@ -42,9 +43,8 @@ sys.path.append(os.environ['PYPLUGPATH']) # might be needed to import from plugi
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = sys.exec_prefix.replace('\\','/') + '/Library/plugins/platforms'
 
 def filtcode():
+    mout.removeindent()
     code = [q for q in vim.eval("@p").split('\n') if len(q)>0]
-    if len(code) == 1:
-        code[0] = code[0].strip()
     if 'fconv' in globals():
         code = [q if q.strip()[0]!='!' else fconv(q) for q in code]
     else:
