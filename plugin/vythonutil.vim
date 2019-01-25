@@ -5,6 +5,9 @@ vnoremap <silent> <F8> mP"py:py3 mout.readtable()<cr>`P
 
 nnoremap <c-enter> :py3 exec(fconv(vim.current.line))<cr>
 inoremap <c-enter> <esc>:py3 exec(fconv(vim.current.line))<cr>a
+"alternate mappings for terminal/ssh usage
+    nnoremap <c-]> :py3 exec(fconv(vim.current.line))<cr>
+    inoremap <c-]> <esc>:py3 exec(fconv(vim.current.line))<cr>a
 nnoremap <F7> :py3 fconv(vim.current.line, replace=True)<cr>
 inoremap <F7> <esc>:py3 fconv(vim.current.line, replace=True)<cr>a
 

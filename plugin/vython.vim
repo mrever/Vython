@@ -11,12 +11,18 @@ vnoremap <silent> <F5> mP<esc>ggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exe
 
 nnoremap <silent> <s-enter> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <s-enter> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-"vnoremap <silent> <s-enter> mP"py:py3 mout.removeindent()<cr>:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 vnoremap <silent> <s-enter> mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"alternate mappings for terminal/ssh usage
+    nnoremap <silent> <c-\> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+    inoremap <silent> <c-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+    vnoremap <silent> <c-\> mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
 nnoremap <silent> <c-b> mPV"py:py3 mout.printexp()<cr>`P
 inoremap <silent> <c-b> <esc>mPV"py:py3 mout.printexp()<cr>`Pa
 vnoremap <silent> <c-b> mP"py:py3 mout.printexp()<cr>`P
+    nnoremap <silent> <m-b> mPV"py:py3 mout.printexp()<cr>`P
+    inoremap <silent> <m-b> <esc>mPV"py:py3 mout.printexp()<cr>`Pa
+    vnoremap <silent> <m-b> mP"py:py3 mout.printexp()<cr>`P
 
 inoremap <c-u> <C-R>=Pycomplete()<CR>
 
