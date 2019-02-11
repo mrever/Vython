@@ -3,11 +3,11 @@ command! Vythonutil normal :call Vythonutil()<cr>
 nnoremap <silent> <F8> mP{V}"py:py3 mout.readtable()<cr>`P
 vnoremap <silent> <F8> mP"py:py3 mout.readtable()<cr>`P
 
-nnoremap <c-enter> :py3 exec(fconv(vim.current.line))<cr>
-inoremap <c-enter> <esc>:py3 exec(fconv(vim.current.line))<cr>a
+nnoremap <c-enter> :py3 exec(fconv(vim.current.line, disp=True))<cr>
+inoremap <c-enter> <esc>:py3 exec(fconv(vim.current.line, disp=True))<cr>a
 "alternate mappings for terminal/ssh usage
-    nnoremap <c-]> :py3 exec(fconv(vim.current.line))<cr>
-    inoremap <c-]> <esc>:py3 exec(fconv(vim.current.line))<cr>a
+    nnoremap <c-]> :py3 exec(fconv(vim.current.line, disp=True))<cr>
+    inoremap <c-]> <esc>:py3 exec(fconv(vim.current.line, disp=True))<cr>a
 nnoremap <F7> :py3 fconv(vim.current.line, replace=True)<cr>
 inoremap <F7> <esc>:py3 fconv(vim.current.line, replace=True)<cr>a
 
@@ -65,14 +65,14 @@ def cpmv(*args):
         sym = ' --> '
     try:
         call([cmd] + args, display=False)
-        files = [os.path.abspath(f).replace('\\','/') for f in args if os.path.exists(f)]
+        files = [os.path.abspath(f).replace('\\','/') for f in args]# if os.path.exists(f)]
         p1 = files[0]
         p2 = files[1]
         print(p1 + sym + p2)
         print()
     except:
-        ostr = repr(args).replace('[','').replace(']','').replace("'",'')
-        print('Failure: ' + cmd + ' ' + ostr)
+       ostr = repr(args).replace('[','').replace(']','').replace("'",'')
+       print('Failure: ' + cmd + ' ' + ostr)
 
 def rm(*args):
     args = list(args)
@@ -110,8 +110,8 @@ def fconv(cmd, replace=False, disp=False):
     rstr = ' '*numspaces + rstr
     if replace:
         vim.current.line = rstr
-    if True:
-        print(string)
+    if disp:
+        #print(string)
         print(rstr)
     return rstr
 

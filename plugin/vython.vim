@@ -5,17 +5,17 @@ let $PYPLUGPATH .= expand('<sfile>:p:h') "used to import .py files from plugin d
 command! Vython normal :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr><c-w><c-h>
 nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr><c-w><c-h>
 
-nnoremap <silent> <F5> mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <F5> <esc>mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <F5> mP<esc>ggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <F5> mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <F5> <esc>mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <F5> mP<esc>ggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
-nnoremap <silent> <s-enter> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <s-enter> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <s-enter> mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <s-enter> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <s-enter> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <s-enter> mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 "alternate mappings for terminal/ssh usage
-    nnoremap <silent> <c-\> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-    inoremap <silent> <c-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-    vnoremap <silent> <c-\> mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+    nnoremap <silent> <c-\> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+    inoremap <silent> <c-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+    vnoremap <silent> <c-\> mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode()); mout.flushbuff()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
 nnoremap <silent> <c-b> mPV"py:py3 mout.printexp()<cr>`P
 inoremap <silent> <c-b> <esc>mPV"py:py3 mout.printexp()<cr>`Pa
@@ -50,6 +50,7 @@ os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = sys.exec_prefix.replace('\\','/') + 
 
 def filtcode():
     mout.removeindent()
+    mout.tempoutstr = ''
     code = [q for q in vim.eval("@p").split('\n') if len(q)>0]
     if 'fconv' in globals():
         code = [q if q.strip()[0]!='!' else fconv(q) for q in code]
@@ -57,14 +58,29 @@ def filtcode():
         code = [q for q in code if q.strip()[0]!='!']
     return '\n'.join(code)
 
+def insertlines(text):
+    thisbuf = vim.current.buffer
+    pos = vim.current.range.end + 1
+    buffstart = thisbuf[:pos]
+    buffend =  thisbuf[pos:]
+    for line in text.split('\n'):
+        buffstart.append(line)
+        vim.current.buffer.append('')
+    newbuff = buffstart + buffend
+    for i, line in enumerate(newbuff):
+        vim.current.buffer[i] = line
+
+
 class outputter():
     def __init__(self):
         self.linecount = 1
         self.pybuf = vim.current.buffer
         self.pywin = vim.current.window
         self.oldlinecount = 0
+        self.tempoutstr = ''
 
     def output(self):
+        return
         self.pybuf.append('')
         self.pybuf.append('In [' + str(self.linecount) + ']:')
         z = [q for q in vim.eval("@p").split('\n') if len(q)>0]
@@ -72,7 +88,6 @@ class outputter():
         numlines = len(z)
         self.linecount += 1
         if numlines > 9:
-            thiswin = vim.current.window
             thiswin = vim.current.window
             for win in vim.current.tabpage.windows:
                 if 'pythonbuff' in win.buffer.name:
@@ -97,12 +112,21 @@ class outputter():
             outstr += str(a) + sep
         if outstr:
             outstr = outstr[:-len(sep)]
-        if newlinecount != self.oldlinecount:
-            self.pybuf.append('') 
-            self.pybuf.append('Out [' + str(newlinecount) + ']:') 
-        [self.pybuf.append(s) for s in outstr.split('\n')] 
+#        if newlinecount != self.oldlinecount:
+#            self.pybuf.append('') 
+#            self.pybuf.append('Out [' + str(newlinecount) + ']:') 
+        self.tempoutstr += '\n' + outstr
+
+    def flushbuff(self):
+        outstr = self.tempoutstr
+        thiswin = vim.current.window
+        if thiswin is self.pywin:
+            insertlines(outstr)
+        else:
+            [self.pybuf.append(s) for s in outstr.split('\n')] 
+            self.scrollbuffend()
         self.oldlinecount = self.linecount-1
-        self.scrollbuffend()
+        self.tempoutstr = ''
 
     #only prints string that has content (for displaying Python execution results)
     def smartprint(self, stringtoprint):
@@ -210,7 +234,7 @@ try:
         thisline = vim.current.line
         token = thisline[:oldcursposx]
         token = re.split(';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
-        completions= [token] + completer.all_completions(token)
+        completions = [token] + completer.all_completions(token)
         thistoken = token
         replaceline = thisline[:(oldcursposx-len(thistoken))] + thisline[(oldcursposx):]
         vim.current.line = replaceline
