@@ -42,6 +42,11 @@ import threading
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
+#work-around for Python3.7/tensorflow
+if not hasattr(vim, 'find_module'):
+    def dum(*args, **kwargs): pass
+    vim.find_module = dum
+
 sys.argv = ['']
 sys.path.append('.') #might be needed to import from current directory
 sys.path.append(os.environ['PYPLUGPATH']) # might be needed to import from plugin directory
