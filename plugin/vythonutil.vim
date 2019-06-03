@@ -3,13 +3,13 @@ command! Vythonutil normal :call Vythonutil()<cr>
 nnoremap <silent> <F8> mP{V}"py:py3 mout.readtable()<cr>`P
 vnoremap <silent> <F8> mP"py:py3 mout.readtable()<cr>`P
 
-nnoremap <c-enter> :py3 exec(fconv(vim.current.line))<cr>
-inoremap <c-enter> <esc>:py3 exec(fconv(vim.current.line))<cr>a
+nnoremap <silent> <c-enter> :py3 exec(fconv(vim.current.line))<cr>
+inoremap <silent> <c-enter> <esc>:py3 exec(fconv(vim.current.line))<cr>a
 "alternate mappings for terminal/ssh usage
-    nnoremap <c-]> :py3 exec(fconv(vim.current.line))<cr>
-    inoremap <c-]> <esc>:py3 exec(fconv(vim.current.line))<cr>a
-nnoremap <F7> :py3 fconv(vim.current.line, replace=True)<cr>
-inoremap <F7> <esc>:py3 fconv(vim.current.line, replace=True)<cr>a
+    nnoremap <silent> <c-]> :py3 exec(fconv(vim.current.line))<cr>
+    inoremap <silent> <c-]> <esc>:py3 exec(fconv(vim.current.line))<cr>a
+nnoremap <silent> <F7> :py3 fconv(vim.current.line, replace=True)<cr>
+inoremap <silent> <F7> <esc>:py3 fconv(vim.current.line, replace=True)<cr>a
 
 func! Vythonutil()
 py3 << EOL
@@ -41,7 +41,8 @@ def cd(cdir='.'):
         cdir = '.'
     global fis, dirs
     try:
-        os.chdir(cdir)
+        vim.command('cd ' + cdir)
+        #os.chdir(cdir)
         dirs.append(pwd(display=False))
         print(os.getcwd().replace('\\', '/'))
         fis = glob.glob('*')
@@ -110,10 +111,16 @@ def fconv(cmd, replace=False, disp=False):
     rstr = ' '*numspaces + rstr
     if replace:
         vim.current.line = rstr
-    if True:
+    if disp:
         print(string)
-        print(rstr)
+    print(rstr)
     return rstr
+
+def loadenvvariables():
+    for envvar in list(os.environ.keys()):
+        if envvar:
+            globals()[envvar] = os.environ[envvar]
+loadenvvariables()
 
 
 
@@ -123,6 +130,9 @@ def mchdir():
     dirname = filedialog.askdirectory(parent=root,initialdir=os.getcwd(),title='Change directory...')
     os.chdir(dirname)
     return dirname
+
+
+
 
 #############numerical support
 try:
