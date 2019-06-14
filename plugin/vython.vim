@@ -55,11 +55,11 @@ os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = sys.exec_prefix.replace('\\','/') + 
 
 def filtcode():
     mout.removeindent()
-    code = [q for q in vim.eval("@p").split('\n') if len(q)>0]
+    code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
     if 'fconv' in globals():
         code = [q if q.strip()[0]!='!' else fconv(q) for q in code]
     else:
-        code = [q for q in code if q.strip()[0]!='!']
+        code = [q for q in code if q and len(q.strip())>0 and q.strip()[0]!='!']
     return '\n'.join(code)
 
 class outputter():
