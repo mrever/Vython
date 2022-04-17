@@ -6,10 +6,12 @@ vnoremap <silent> <F8> mP"py:py3 mout.readtable()<cr>`P
 nnoremap <silent> <c-enter> :py3 exec(fconv(vim.current.line))<cr>
 inoremap <silent> <c-enter> <esc>:py3 exec(fconv(vim.current.line))<cr>a
 "alternate mappings for terminal/ssh usage
-    nnoremap <silent> <c-]> :py3 exec(fconv(vim.current.line))<cr>
-    inoremap <silent> <c-]> <esc>:py3 exec(fconv(vim.current.line))<cr>a
+    "nnoremap <silent> <c-]> :py3 exec(fconv(vim.current.line))<cr>
+    "inoremap <silent> <c-]> <esc>:py3 exec(fconv(vim.current.line))<cr>a
 nnoremap <silent> <F7> :py3 fconv(vim.current.line, replace=True)<cr>
 inoremap <silent> <F7> <esc>:py3 fconv(vim.current.line, replace=True)<cr>a
+
+nnoremap <silent> <c-F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:call Vythonutil()<cr><c-w><c-h>
 
 func! Vythonutil()
 py3 << EOL
