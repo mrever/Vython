@@ -9,9 +9,9 @@ nnoremap <silent> <F5>      mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exe
 inoremap <silent> <F5> <esc>mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <F5> mP<esc>ggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
-"nnoremap <silent> <s-enter> mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-"inoremap <silent> <s-enter> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-"vnoremap <silent> <s-enter> mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <s-enter>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <s-enter> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <s-enter>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 "alternate mappings for terminal/ssh usage
 nnoremap <silent> <c-\>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <c-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
@@ -24,6 +24,10 @@ vnoremap <silent> <c-]>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 hy.ev
 nnoremap <silent> <m-\>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <m-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <m-\>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"js2py support
+nnoremap <silent> <m-]>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-]> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-]>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
 
 nnoremap <silent> <c-b>      mPV"py:py3 mout.printexp()<cr>`P
@@ -33,9 +37,6 @@ vnoremap <silent> <c-b>       mP"py:py3 mout.printexp()<cr>`P
 nmap <m-b> <c-b>
 imap <m-b> <c-b>
 vmap <m-b> <c-b>
-"nnoremap <silent> <m-b>      mPV"py:py3 mout.printexp()<cr>`P
-"inoremap <silent> <m-b> <esc>mPV"py:py3 mout.printexp()<cr>`Pa
-"vnoremap <silent> <m-b>       mP"py:py3 mout.printexp()<cr>`P
 
 inoremap <c-u> <C-R>=Pycomplete()<CR>
 
@@ -76,14 +77,8 @@ except:
     print('coconut not installed')
 
 #julia stuff
-def pjeval(expr):
-    return eval(expr) # in case we don't have julia
 try:
-    import julia
-    from julia.api import Julia
-    from julia import Base
-    import julia.Base
-    _juliasess = Julia()
+    from julia import Main as jumain
 
     nprint = '''
     import Base.print
@@ -110,25 +105,17 @@ try:
     using REPL
     '''
 
-    _juliasess.eval(nprint)
+    jumain.eval(nprint)
     def _resjprint():
-        _juliasess.eval('pyoutstr = ""')
+        jumain.eval('pyoutstr = ""')
     _resjprint()
 
     def _jeval(jcode):
         _resjprint()
-        julout = _juliasess.eval(jcode)
-        out = _juliasess.eval('print("")')
+        julout = jumain.eval(jcode)
+        out = jumain.eval('print("")')
         print(out)
         return julout
-    def pjeval(expr):
-        try: 
-            return eval(expr)
-        except:
-            try:
-                return  _juliasess.eval(expr)
-            except:
-                return
 
     def juliafiltcode():
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
@@ -136,6 +123,45 @@ try:
 except:
     print('julia not installed')
 #end julia stuff
+
+# javascript to py stuff
+try:
+    import js2py
+    from js2py.pyjs import *
+    var = Scope( JS_BUILTINS )
+    set_global_object(var)
+    def jsfiltcode():
+        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        return '\n'.join(code)
+    def jstrans(code):
+        trans = js2py.translate_js(code)
+        newcode = '\n'.join( trans.split('\n')[4:]  )
+        return newcode
+    def jsget(varname):
+        return var.get(varname).to_python()
+    def jsevexpr(expr):
+        trans = js2py.translate_js(expr)
+        lline = trans.split('\n')[-2]
+        result = eval(lline).to_python()
+        return result
+except:
+    print("js2py not installed")
+# end javascript to py stuff
+
+# try to evaluate expressions for different languages
+def pjeval(expr):
+    try: 
+        return eval(expr)
+    except:
+        pass
+    try:
+        return jumain.eval(expr)
+    except:
+        pass
+    try:
+        return jsevexpr(expr)
+    except:
+        pass
 
 
 #work-around for Python3.7/tensorflow
@@ -242,7 +268,7 @@ class outputter():
                         thisexp = thisexp[:-1]
                 expout = thisexp.strip() + ' = ' + repr(pjeval(thisexp))
                 [vyself.pybuf.append(exp) for exp in expout.split('\n')] 
-            except:
+            except Exception as e1:
                 try:
                     thisexp = thisline.replace('\n','')
                     expout = thisexp + ' = ' + repr(pjeval(thisexp))
@@ -332,7 +358,7 @@ try:
             pass
         try:
             jcompstr = 'jcompletions = REPL.REPLCompletions.completions("' + token +  '", ' + str(len(token)) + '); [string(jcompletions[1][i].mod) for i = 1:length(jcompletions[1])  ]'
-            jcomps = _juliasess.eval(jcompstr)
+            jcomps = jumain.eval(jcompstr)
             if token[-1] == '.':
                 jcomps = [token + jc for jc in jcomps]
             completions += jcomps
