@@ -2,8 +2,8 @@ if has('python3')
 
 let $PYPLUGPATH .= expand('<sfile>:p:h') "used to import .py files from plugin directory
 
-command! Vython normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr><c-w><c-h>
-nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr><c-w><c-h>
+command! Vython normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>
+nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>
 
 nnoremap <silent> <F5>      mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <F5> <esc>mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
