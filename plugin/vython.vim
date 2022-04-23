@@ -5,6 +5,8 @@ let $PYPLUGPATH .= expand('<sfile>:p:h') "used to import .py files from plugin d
 command! Vython normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>
 nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>
 
+func! Vythonload()
+
 nnoremap <silent> <F5>      mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <F5> <esc>mPggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <F5> mP<esc>ggVG"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
@@ -28,6 +30,14 @@ vnoremap <silent> <m-\>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeva
 nnoremap <silent> <m-]>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <m-]> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <m-]>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"octave support
+nnoremap <silent> <m-;>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-;> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-;>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"R support
+nnoremap <silent> <m-'>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-'> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-'>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
 
 nnoremap <silent> <c-b>      mPV"py:py3 mout.printexp()<cr>`P
@@ -44,7 +54,8 @@ func! Pycomplete()
     py3 vim.command("call complete(col(\'.\'), " + repr(get_completions()) + ')')
     return ''
 endfunc
-func! Vythonload()
+
+
 py3 << EOL
 import vim
 import sys
@@ -148,6 +159,33 @@ except:
     print("js2py not installed")
 # end javascript to py stuff
 
+# octave oct2py
+try:
+    from oct2py import Oct2Py
+    _oct = Oct2Py()
+    def octfiltcode():
+        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        return '\n'.join(code)
+    def octevexpr(expr):
+        _oct.eval('_dum_ =' + expr + ';')
+        return _oct.pull('_dum_')
+except:
+    print("oct2py not installed")
+# end octave stuff
+
+# R rpy2
+try:
+    import rpy2
+    import rpy2.robjects as robjects
+    def rfiltcode():
+        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        return '\n'.join(code)
+    def revexpr(expr):
+        return robjects.r(expr)
+except:
+    print("rpy2 not installed")
+# end R stuff
+
 # try to evaluate expressions for different languages
 def pjeval(expr):
     try: 
@@ -161,6 +199,14 @@ def pjeval(expr):
     try:
         return jsevexpr(expr)
     except:
+        pass
+    try:
+        return octevexpr(expr)
+    except Exception as e:
+        pass
+    try:
+        return revexpr(expr)
+    except Exception as e:
         pass
 
 
