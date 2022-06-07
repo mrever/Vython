@@ -13,6 +13,10 @@ inoremap <silent> <F7> <esc>:py3 fconv(vim.current.line, replace=True)<cr>a
 
 nnoremap <silent> <c-F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:call Vythonutil()<cr><c-w><c-h>
 
+if has('nvim')
+    py3 __nvim__ = True
+endif
+
 func! Vythonutil()
 py3 << EOL
 import vim
@@ -122,7 +126,7 @@ def loadenvvariables():
     for envvar in list(os.environ.keys()):
         if envvar:
             globals()[envvar] = os.environ[envvar]
-loadenvvariables()
+# loadenvvariables()
 
 
 
@@ -134,6 +138,11 @@ def mchdir():
     return dirname
 
 
+#if (type(vim.vars) == vim.Dictionary):
+if 'Dictionary' in dir(vim):
+    isnvim = False
+else:
+    isnvim = True
 
 
 #############numerical support
@@ -144,6 +153,7 @@ except:
 try:
     import numpy as np
     from bokeh.plotting import figure, output_file, show
+    from bokeh.models.tools import HoverTool
     import matplotlib
     import matplotlib.pyplot as plt
 except:
@@ -154,18 +164,30 @@ except:
 def plot(*args, **kwargs):
     plt.figure()
     plt.plot(*args, **kwargs)
-    plt.show(block=False)
+    if isnvim:
+        plt.show()
+    else:
+        plt.show(block=False)
 
 def imshow(*args, **kwargs):
     plt.figure()
     plt.imshow(*args, **kwargs)
-    plt.show(block=False)
+    if isnvim:
+        plt.show()
+    else:
+        plt.show(block=False)
 
- 
 def bplot(x=None,y=None,outfile='lines.html',title='',xlab='',ylab='',legend=None,linew=2):
+    if not y:
+        y = np.array(x).copy()
+        x = np.arange(len(x))
     output_file(outfile)
     p = figure(title=title, x_axis_label=xlab, y_axis_label=ylab)
-    p.line(x,y, legend=legend, line_width=linew)
+    if legend:
+        p.line(x,y, legend=legend, line_width=linew)
+    else:
+        p.line(x,y, line_width=linew)
+    p.add_tools(HoverTool())
     p.toolbar.logo = None #don't show Bokeh icon/link
     show(p)
 

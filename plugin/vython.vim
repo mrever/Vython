@@ -18,18 +18,31 @@ vnoremap <silent> <s-enter>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 e
 nnoremap <silent> <c-\>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <c-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <c-\>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+
+" If you want to be able to use languages other than Python...
+" Python will still work even if you don't have these other languages/environments.
+" But everything still requires Python to be set up properly
+"
+"hy, coconut, ans js2py require their respective Python packages to be
+"installed (pip install hy/coconut/js2py should be fine)
 "hy support
+command! Coconut normal :py3 _coconut_On_    = True<cr>
+command! Coconutoff normal :py3 _coconut_On_ = False<cr>
 nnoremap <silent> <c-]>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 hy.eval( hy.read_str(hyfiltcode()) )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <c-]> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 hy.eval( hy.read_str(hyfiltcode()) )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <c-]>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 hy.eval( hy.read_str(hyfiltcode()) )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-"julia support
-nnoremap <silent> <m-\>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-\>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 "js2py support
 nnoremap <silent> <m-]>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <m-]> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <m-]>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"Julia, Octave, and R require their respective packages to be installed
+" (pip install julia/oc2py/rpy2) as well as their interpreters (you need Julia
+" on your system to run Julia here).  Consult the documentation for those
+" packages for more details.
+"julia support
+nnoremap <silent> <m-\>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-\>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 "octave support
 nnoremap <silent> <m-;>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <m-;> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
@@ -38,6 +51,11 @@ vnoremap <silent> <m-;>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.
 nnoremap <silent> <m-'>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <m-'> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <m-'>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"
+""APL support
+"nnoremap <silent> <m-,>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"inoremap <silent> <m-,> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+"vnoremap <silent> <m-,>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
 
 nnoremap <silent> <c-b>      mPV"py:py3 mout.printexp()<cr>`P
@@ -67,8 +85,13 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 class _blank: pass
+languagemgr = _blank()
+languagemgr.list = []
+
+
 try:
     import hy
+    languagemgr.list.append('hy')
 except:
     hy = _blank()
     def _dumfun(*args, **kwargs): pass
@@ -83,9 +106,35 @@ try:
     from coconut.convenience import parse as _cocoparsetemp
     def cocoparse(cocostr):
         return '\n'.join(_cocoparsetemp(cocostr).split('\n')[6:])
+    languagemgr.list.append('coconut')
 except:
     cocoparse = lambda x: x
     print('coconut not installed')
+
+# javascript to py stuff
+try:
+    import js2py
+    from js2py.pyjs import *
+    var = Scope( JS_BUILTINS )
+    set_global_object(var)
+    def jsfiltcode():
+        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        return '\n'.join(code)
+    def jstrans(code):
+        trans = js2py.translate_js(code)
+        newcode = '\n'.join( trans.split('\n')[4:]  )
+        return newcode
+    def jsget(varname):
+        return var.get(varname).to_python()
+    def jsevexpr(expr):
+        trans = js2py.translate_js(expr)
+        lline = trans.split('\n')[-2]
+        result = eval(lline).to_python()
+        return result
+    languagemgr.list.append('javascript')
+except:
+    print("js2py not installed")
+# end javascript to py stuff
 
 #julia stuff
 try:
@@ -131,33 +180,11 @@ try:
     def juliafiltcode():
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
         return '\n'.join(code)
+    languagemgr.list.append('julia')
 except:
-    print('julia not installed')
+    print('julia bridge not installed or working')
 #end julia stuff
 
-# javascript to py stuff
-try:
-    import js2py
-    from js2py.pyjs import *
-    var = Scope( JS_BUILTINS )
-    set_global_object(var)
-    def jsfiltcode():
-        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
-        return '\n'.join(code)
-    def jstrans(code):
-        trans = js2py.translate_js(code)
-        newcode = '\n'.join( trans.split('\n')[4:]  )
-        return newcode
-    def jsget(varname):
-        return var.get(varname).to_python()
-    def jsevexpr(expr):
-        trans = js2py.translate_js(expr)
-        lline = trans.split('\n')[-2]
-        result = eval(lline).to_python()
-        return result
-except:
-    print("js2py not installed")
-# end javascript to py stuff
 
 # octave oct2py
 try:
@@ -169,8 +196,9 @@ try:
     def octevexpr(expr):
         _oct.eval('_dum_ =' + expr + ';')
         return _oct.pull('_dum_')
+    languagemgr.list.append('octave')
 except:
-    print("oct2py not installed")
+    print("oct2py not installed or working")
 # end octave stuff
 
 # R rpy2
@@ -182,32 +210,61 @@ try:
         return '\n'.join(code)
     def revexpr(expr):
         return robjects.r(expr)
+    languagemgr.list.append('R')
 except:
-    print("rpy2 not installed")
+    print("rpy2 not installed or working")
 # end R stuff
+
+# # pynapl Python APL bridge
+# try:
+    # from pynapl import APL
+    # apl = APL.APL()
+    # def aplfiltcode():
+        # code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        # return '\n'.join(code)
+    # def aplevexpr(expr):
+        # return apl.eval(expr)
+    # languagemgr.list.append('apl')
+# except:
+    # print("pynapl not installed or working")
+# # end APL stuff
 
 # try to evaluate expressions for different languages
 def pjeval(expr):
     try: 
         return eval(expr)
-    except:
-        pass
-    try:
-        return jumain.eval(expr)
-    except:
-        pass
-    try:
-        return jsevexpr(expr)
-    except:
-        pass
-    try:
-        return octevexpr(expr)
     except Exception as e:
         pass
-    try:
-        return revexpr(expr)
-    except Exception as e:
-        pass
+    if 'hy' in languagemgr.list:
+        try:
+             return hy.eval( hy.read_str(expr) )
+         except:
+             pass
+    if 'julia' in languagemgr.list:
+        try:
+            return jumain.eval(expr)
+        except Exception as e:
+            pass
+    if 'javascript' in languagemgr.list:
+        try:
+            return jsevexpr(expr)
+        except Exception as e:
+            pass
+    if 'octave' in languagemgr.list:
+        try:
+            return octevexpr(expr)
+        except Exception as e:
+            pass
+    if 'R' in languagemgr.list:
+        try:
+            return revexpr(expr)
+        except Exception as e:
+            pass
+    if 'apl' in languagemgr.list:
+        try:
+            return apl.eval(expr)
+        except Exception as e:
+            pass
 
 
 #work-around for Python3.7/tensorflow
@@ -225,7 +282,9 @@ if os.getcwd().lower() == 'C:\\WINDOWS\\system32'.lower():
     os.chdir(os.path.expanduser('~'))
 
 
+_coconut_On_ = False
 def filtcode():
+    global _coconut_On_
     mout.removeindent()
     code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
     if 'fconv' in globals():
@@ -233,7 +292,10 @@ def filtcode():
     else:
         code = [q for q in code if q and len(q.strip())>0 and q.strip()[0]!='!']
     #try:
-    parsedout = cocoparse('\n'.join(code))
+    if _coconut_On_:
+        parsedout = cocoparse('\n'.join(code))
+    else:
+        parsedout = ('\n'.join(code))
     #except:
         #parsedout = ('\n'.join(code))
     return parsedout
@@ -249,6 +311,21 @@ class outputter():
         vyself.pybuf = vim.current.buffer
         vyself.pywin = vim.current.window
         vyself.oldlinecount = 0
+        vyself.languages = ['python']
+        lappend = vyself.languages.append
+        vyself.languages += languagemgr.list
+        # if 'js2py' in globals():
+            # lappend('javascript')
+        # if 'hy' in globals():
+            # lappend('hy')
+        # if 'coconut' in globals():
+            # lappend('coconut')
+        # if 'julia' in globals():
+            # lappend('julia')
+        # if 'oct2py' in globals():
+            # lappend('octave')
+        # if 'rpy2' in globals():
+            # lappend('r')
 
     def output(vyself):
         vyself.pybuf.append('')
@@ -402,15 +479,23 @@ try:
             completions += completer.all_completions(token)
         except:
             pass
-        try:
-            jcompstr = 'jcompletions = REPL.REPLCompletions.completions("' + token +  '", ' + str(len(token)) + '); [string(jcompletions[1][i].mod) for i = 1:length(jcompletions[1])  ]'
-            jcomps = jumain.eval(jcompstr)
-            if token[-1] == '.':
-                jcomps = [token + jc for jc in jcomps]
-            completions += jcomps
-        except Exception as e:
-            # print(e)
-            pass
+        if 'julia' in mout.languages:
+            try:
+                jcompstr = 'jcompletions = REPL.REPLCompletions.completions("' + token +  '", ' + str(len(token)) + '); [string(jcompletions[1][i].mod) for i = 1:length(jcompletions[1])  ]'
+                jcomps = jumain.eval(jcompstr)
+                if token[-1] == '.':
+                    jcomps = [token + jc for jc in jcomps]
+                completions += jcomps
+            except Exception as e:
+                pass
+        if 'octave' in mout.languages:
+            try:
+                ocompstr ='_ocomps = completion_matches("' + token + '")' 
+                _oct.eval(ocompstr)
+                ocomps = list(_oct.pull('_ocomps'))
+                completions += ocomps
+            except Exception as e:
+                pass
         thistoken = token
         replaceline = thisline[:(oldcursposx-len(thistoken))] + thisline[(oldcursposx):]
         vim.current.line = replaceline
