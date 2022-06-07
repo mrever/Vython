@@ -238,7 +238,7 @@ def pjeval(expr):
     if 'hy' in languagemgr.list:
         try:
              return hy.eval( hy.read_str(expr) )
-         except:
+        except:
              pass
     if 'julia' in languagemgr.list:
         try:
