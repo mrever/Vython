@@ -2,8 +2,8 @@ if has('python3')
 
 let $PYPLUGPATH .= expand('<sfile>:p:h') "used to import .py files from plugin directory
 
-command! Vython normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>
-nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>
+command! Vython normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>
+nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>
 
 func! Vythonload()
 
@@ -74,6 +74,20 @@ func! Pycomplete()
 endfunc
 
 
+"lua support
+if has('lua')
+nnoremap <silent> <m-/>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-/> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-/>       mP"py:py3 mout.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+ 
+lua << EOLUA
+function luafiltcode()
+    return vim.eval("@p")
+end
+EOLUA
+py3 _haslua = True
+endif "end if has lua
+
 py3 << EOL
 import vim
 import sys
@@ -88,6 +102,32 @@ class _blank: pass
 languagemgr = _blank()
 languagemgr.list = []
 
+if '_haslua' in globals():
+    languagemgr.list.append('lua')
+    def luaeval(luastring):
+        vim.command('redir @b')
+        vim.command(f'lua print(type({luastring}))')
+        vim.command('redir END')
+        valtype = vim.eval("@b").strip()
+        vim.command('redir @b')
+        vim.command(f'lua print({luastring})')
+        vim.command('redir END')
+        valstr = vim.eval("@b").strip()
+        retval = valstr
+        if valtype == 'number':
+            if '.' in valstr:
+                retval = float(valstr)
+            else:
+                retval = int(valstr)
+        if valtype == 'boolean':
+            if valstr.lower() == 'true':
+                retval = True
+            else:
+                retval = False
+        if valtype == 'nil':
+            retval = None
+        return retval
+        #return valstr + ' ' + valtype
 
 try:
     import hy
@@ -235,11 +275,6 @@ def pjeval(expr):
         return eval(expr)
     except Exception as e:
         pass
-    if 'hy' in languagemgr.list:
-        try:
-             return hy.eval( hy.read_str(expr) )
-        except:
-             pass
     if 'julia' in languagemgr.list:
         try:
             return jumain.eval(expr)
@@ -260,6 +295,16 @@ def pjeval(expr):
             return revexpr(expr)
         except Exception as e:
             pass
+    if 'hy' in languagemgr.list:
+        try:
+             return hy.eval( hy.read_str(expr) )
+        except:
+             pass
+    if 'lua' in languagemgr.list:
+        try:
+             return luaeval(expr)
+        except:
+             pass
     if 'apl' in languagemgr.list:
         try:
             return apl.eval(expr)
