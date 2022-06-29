@@ -271,45 +271,48 @@ except:
 
 # try to evaluate expressions for different languages
 def pjeval(expr):
+    mout.vyth_errlist = []
     try: 
         return eval(expr)
     except Exception as e:
-        pass
+        mout.vyth_errlist.append(e)
+    if 'lua' in languagemgr.list:
+        try:
+            _luaeexpr = luaeval(expr)
+            assert _luaeexpr is not None
+            return luaeval(expr)
+        except Exception as e:
+            mout.vyth_errlist.append(e)
     if 'julia' in languagemgr.list:
         try:
             return jumain.eval(expr)
         except Exception as e:
-            pass
+            mout.vyth_errlist.append(e)
     if 'javascript' in languagemgr.list:
         try:
             return jsevexpr(expr)
         except Exception as e:
-            pass
+            mout.vyth_errlist.append(e)
+    if 'hy' in languagemgr.list:
+        try:
+             return hy.eval( hy.read_str(expr) )
+        except Exception as e:
+            mout.vyth_errlist.append(e)
     if 'octave' in languagemgr.list:
         try:
             return octevexpr(expr)
         except Exception as e:
-            pass
+            mout.vyth_errlist.append(e)
     if 'R' in languagemgr.list:
         try:
             return revexpr(expr)
         except Exception as e:
-            pass
-    if 'hy' in languagemgr.list:
-        try:
-             return hy.eval( hy.read_str(expr) )
-        except:
-             pass
-    if 'lua' in languagemgr.list:
-        try:
-             return luaeval(expr)
-        except:
-             pass
+            mout.vyth_errlist.append(e)
     if 'apl' in languagemgr.list:
         try:
             return apl.eval(expr)
         except Exception as e:
-            pass
+            mout.vyth_errlist.append(e)
 
 
 #work-around for Python3.7/tensorflow
@@ -359,6 +362,7 @@ class outputter():
         vyself.languages = ['python']
         lappend = vyself.languages.append
         vyself.languages += languagemgr.list
+        vyself.vyth_errlist = [] 
         # if 'js2py' in globals():
             # lappend('javascript')
         # if 'hy' in globals():
