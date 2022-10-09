@@ -35,27 +35,6 @@ vnoremap <silent> <c-]>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 hy.ev
 nnoremap <silent> <m-]>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 inoremap <silent> <m-]> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <m-]>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-"Julia, Octave, and R require their respective packages to be installed
-" (pip install julia/oc2py/rpy2) as well as their interpreters (you need Julia
-" on your system to run Julia here).  Consult the documentation for those
-" packages for more details.
-"julia support
-nnoremap <silent> <m-\>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-\>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-"octave support
-nnoremap <silent> <m-;>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-;> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-;>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-"R support
-nnoremap <silent> <m-'>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-'> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-'>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-"
-""APL support
-"nnoremap <silent> <m-,>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
-"inoremap <silent> <m-,> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
-"vnoremap <silent> <m-,>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
 
 
 nnoremap <silent> <c-b>      mPV"py:py3 mout.printexp()<cr>`P
@@ -142,7 +121,7 @@ except:
 try:
     import sys as _coconut_sys
     from coconut.__coconut__ import *
-    from coconut.__coconut__ import _coconut_tail_call, _coconut_tco, _coconut_call_set_names, _coconut_handle_cls_kwargs, _coconut_handle_cls_stargs, _coconut, _coconut_MatchError, _coconut_igetitem, _coconut_base_compose, _coconut_forward_compose, _coconut_back_compose, _coconut_forward_star_compose, _coconut_back_star_compose, _coconut_forward_dubstar_compose, _coconut_back_dubstar_compose, _coconut_pipe, _coconut_star_pipe, _coconut_dubstar_pipe, _coconut_back_pipe, _coconut_back_star_pipe, _coconut_back_dubstar_pipe, _coconut_none_pipe, _coconut_none_star_pipe, _coconut_none_dubstar_pipe, _coconut_bool_and, _coconut_bool_or, _coconut_none_coalesce, _coconut_minus, _coconut_map, _coconut_partial, _coconut_get_function_match_error, _coconut_base_pattern_func, _coconut_addpattern, _coconut_sentinel, _coconut_assert, _coconut_mark_as_match, _coconut_reiterable, _coconut_self_match_types, _coconut_dict_merge, _coconut_exec
+    from coconut.__coconut__ import _coconut_tail_call, _coconut_tco, _coconut_call_set_names, _coconut_handle_cls_kwargs, _coconut_handle_cls_stargs, _coconut, _coconut_MatchError,  _coconut_base_compose, _coconut_forward_compose, _coconut_back_compose, _coconut_forward_star_compose, _coconut_back_star_compose, _coconut_forward_dubstar_compose, _coconut_back_dubstar_compose, _coconut_pipe, _coconut_star_pipe, _coconut_dubstar_pipe, _coconut_back_pipe, _coconut_back_star_pipe, _coconut_back_dubstar_pipe, _coconut_none_pipe, _coconut_none_star_pipe, _coconut_none_dubstar_pipe, _coconut_bool_and, _coconut_bool_or, _coconut_none_coalesce, _coconut_minus, _coconut_map, _coconut_partial, _coconut_get_function_match_error, _coconut_base_pattern_func, _coconut_addpattern, _coconut_sentinel, _coconut_assert, _coconut_mark_as_match, _coconut_reiterable, _coconut_self_match_types, _coconut_dict_merge, _coconut_exec
     from coconut.convenience import parse as _cocoparsetemp
     def cocoparse(cocostr):
         return '\n'.join(_cocoparsetemp(cocostr).split('\n')[6:])
@@ -176,98 +155,6 @@ except:
     print("js2py not installed")
 # end javascript to py stuff
 
-#julia stuff
-try:
-    from julia import Main as jumain
-
-    nprint = '''
-    import Base.print
-    import Base.println
-    pyoutstr = ""
-    function apptxtout(txt)
-    global pyoutstr *= string(txt)
-    end
-    function print(txt, args...; kwargs...)
-    apptxtout(txt)
-    for arg in args
-    apptxtout(arg)
-    end
-    pyoutstr
-    end
-    function println(txt, args...; kwargs...)
-    apptxtout(txt)
-    for arg in args
-    apptxtout(arg)
-    end
-    apptxtout("\n")
-    pyoutstr
-    end
-    using REPL
-    '''
-
-    jumain.eval(nprint)
-    def _resjprint():
-        jumain.eval('pyoutstr = ""')
-    _resjprint()
-
-    def _jeval(jcode):
-        _resjprint()
-        julout = jumain.eval(jcode)
-        out = jumain.eval('print("")')
-        print(out)
-        return julout
-
-    def juliafiltcode():
-        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
-        return '\n'.join(code)
-    languagemgr.list.append('julia')
-except:
-    print('julia bridge not installed or working')
-#end julia stuff
-
-
-# octave oct2py
-try:
-    from oct2py import Oct2Py
-    _oct = Oct2Py()
-    def octfiltcode():
-        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
-        return '\n'.join(code)
-    def octevexpr(expr):
-        _oct.eval('_dum_ =' + expr + ';')
-        return _oct.pull('_dum_')
-    languagemgr.list.append('octave')
-except:
-    print("oct2py not installed or working")
-# end octave stuff
-
-# R rpy2
-try:
-    import rpy2
-    import rpy2.robjects as robjects
-    def rfiltcode():
-        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
-        return '\n'.join(code)
-    def revexpr(expr):
-        return robjects.r(expr)
-    languagemgr.list.append('R')
-except:
-    print("rpy2 not installed or working")
-# end R stuff
-
-# # pynapl Python APL bridge
-# try:
-    # from pynapl import APL
-    # apl = APL.APL()
-    # def aplfiltcode():
-        # code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
-        # return '\n'.join(code)
-    # def aplevexpr(expr):
-        # return apl.eval(expr)
-    # languagemgr.list.append('apl')
-# except:
-    # print("pynapl not installed or working")
-# # end APL stuff
 
 # try to evaluate expressions for different languages
 def pjeval(expr):
@@ -609,5 +496,126 @@ def runfbackg(filename):
 EOL
 endfunc "end Vythonload
 
+command! Vythonother normal :call Vython_other()<cr>
+func! Vython_other()
+"Julia, Octave, and R require their respective packages to be installed
+" (pip install julia/oc2py/rpy2) as well as their interpreters (you need Julia
+" on your system to run Julia here).  Consult the documentation for those
+" packages for more details.
+"julia support
+nnoremap <silent> <m-\>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-\> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-\>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"octave support
+nnoremap <silent> <m-;>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-;> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-;>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"R support
+nnoremap <silent> <m-'>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-'> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-'>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"
+""APL support
+"nnoremap <silent> <m-,>      mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+"inoremap <silent> <m-,> <esc>mPV"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`Pa
+"vnoremap <silent> <m-,>       mP"py:py3 mout.output()<cr>:redir @b<cr>:py3 apl.eval( aplfiltcode() )<cr>:redir END<cr>:py3 mout.smartprint(vim.eval("@b"))<cr>`P
+py3 << EOL2
+#julia stuff
+try:
+    from julia import Main as jumain
+
+    nprint = '''
+    import Base.print
+    import Base.println
+    pyoutstr = ""
+    function apptxtout(txt)
+    global pyoutstr *= string(txt)
+    end
+    function print(txt, args...; kwargs...)
+    apptxtout(txt)
+    for arg in args
+    apptxtout(arg)
+    end
+    pyoutstr
+    end
+    function println(txt, args...; kwargs...)
+    apptxtout(txt)
+    for arg in args
+    apptxtout(arg)
+    end
+    apptxtout("\n")
+    pyoutstr
+    end
+    using REPL
+    '''
+
+    jumain.eval(nprint)
+    def _resjprint():
+        jumain.eval('pyoutstr = ""')
+    _resjprint()
+
+    def _jeval(jcode):
+        _resjprint()
+        julout = jumain.eval(jcode)
+        out = jumain.eval('print("")')
+        print(out)
+        return julout
+
+    def juliafiltcode():
+        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        return '\n'.join(code)
+    languagemgr.list.append('julia')
+except:
+    print('julia bridge not installed or working')
+#end julia stuff
+
+
+# octave oct2py
+try:
+    from oct2py import Oct2Py
+    _oct = Oct2Py()
+    def octfiltcode():
+        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        return '\n'.join(code)
+    def octevexpr(expr):
+        _oct.eval('_dum_ =' + expr + ';')
+        return _oct.pull('_dum_')
+    languagemgr.list.append('octave')
+except:
+    print("oct2py not installed or working")
+# end octave stuff
+
+# R rpy2
+try:
+    import rpy2
+    import rpy2.robjects as robjects
+    def rfiltcode():
+        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        return '\n'.join(code)
+    def revexpr(expr):
+        return robjects.r(expr)
+    languagemgr.list.append('R')
+except:
+    print("rpy2 not installed or working")
+# end R stuff
+
+# # pynapl Python APL bridge
+# try:
+    # from pynapl import APL
+    # apl = APL.APL()
+    # def aplfiltcode():
+        # code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+        # return '\n'.join(code)
+    # def aplevexpr(expr):
+        # return apl.eval(expr)
+    # languagemgr.list.append('apl')
+# except:
+    # print("pynapl not installed or working")
+# # end APL stuff
+
+EOL2
+endfunc "end Vythonother
+
 endif "end if has("python3")
             
+
