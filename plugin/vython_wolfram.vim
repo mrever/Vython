@@ -9,6 +9,7 @@ vnoremap <silent> <m-w>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 _wolf
 
 py3 << EOL
 try:
+    import vim
     if '_blank' not in globals():
         class _blank: pass
         languagemgr = _blank()
@@ -74,6 +75,8 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
     languagemgr.langlist.append("wolfram")
     languagemgr.langevals.append(wolfevexpr)
     languagemgr.langcompleters.append(wolfcompleter)
+
+    vim.command('autocmd VimLeave * :py3 _wolfsession.terminate()')
 
 except Exception as e:
     print("wolframclient not installed or working")
