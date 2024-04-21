@@ -12,9 +12,9 @@ Features:
 Additional Features (2024):  
 -Can execute [Coconut](http://coconut-lang.org/) just like plain Python if Coconut is installed  
 -[Hy](https://docs.hylang.org/en/alpha/) support, just use <c-]>, assuming Hy is installed  
--Julia support if Julia/PyJulia are set up.  Use <m-\\>.  <c-b> and <c-u> (evaluate-and-print, and completions) work just the same between Julia and Python (run :Julia to start)
--Octave support similar to Julia
--Additional languages supported: R, javascript (via js2py), Wolfrm Language, lua, vimscript
+-Julia support if Julia/PyJulia are set up.  Use <m-\\>.  <c-b> and <c-u> (evaluate-and-print, and completions) work just the same between Julia and Python (run :Julia to start) 
+-Octave support similar to Julia 
+-Additional languages supported: R, javascript (via js2py), Wolfrm Language, lua, vimscript 
 
 
 
