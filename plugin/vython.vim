@@ -39,6 +39,7 @@ func! Pycomplete()
     return ''
 endfunc
 
+py3 __nvim__ = False
 if has('nvim')
     py3 __nvim__ = True
 endif
