@@ -120,6 +120,7 @@ class vyth_outputter():
         if not os.path.exists(vyself.hometmp):
             os.mkdir(vyself.hometmp)
         vyself.outhtml = False
+        vyself.htmlbuff = []
 
     def output(vyself):
         vyself.pybuf.append('')
@@ -157,7 +158,7 @@ class vyth_outputter():
         vyself.oldlinecount = vyself.linecount-1
         vyself.scrollbuffend()
         if vyself.outhtml:
-            vyself.writebuffhtml(outstr)
+            vyself.writebuffhtml(outstr, shownum=True)
 
     # only prints string that has content (for displaying Python execution results)
     def smartprint(vyself, stringtoprint):
@@ -234,10 +235,13 @@ class vyth_outputter():
         code = code.replace('\"', '\\\"')
         vim.command('let @p="' + code + '"')
 
-    def writebuffhtml(vyself, string, br=2):
+    def writebuffhtml(vyself, string, br=2, shownum=False):
         with open(vyself.hometmp + "pythonbuff.html", 'a') as f:
+            if shownum:
+                string = 'Out [' + str(len(vyself.htmlbuff)+1) + ']: ' + string
             f.write(string)
             f.write('<br>'*br)
+            vyself.htmlbuff.append(string)
 
     def clearbuffhtml(vyself, string=''):
         with open(vyself.hometmp + "pythonbuff.html", 'w') as f:

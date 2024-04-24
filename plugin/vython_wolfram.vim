@@ -62,7 +62,7 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
         else:
             estr = f'Export[tfname, {istr}]'
         wolfevexpr( estr )
-        vyth.writebuffhtml(istr, br=1)
+        vyth.writebuffhtml(istr, br=1, shownum=True)
         if ext == 'wav':
             vyth.writebuffhtml(f'<audio controls><source src="{tfname}" type="audio/wav"></audio>',br=3)
         else:
