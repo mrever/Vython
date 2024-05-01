@@ -35,7 +35,7 @@ nmap <F9> mpGo<cr><s-insert><esc>V{<F8>uu:py3 vim.current.buffer.append("arr = "
 inoremap <c-u> <C-R>=Pycomplete()<CR>
 
 func! Pycomplete()
-    py3 vim.command("call complete(col(\'.\'), " + repr(get_completions()) + ')')
+    py3 vim.command("call complete(col('.'), " + repr(get_completions()) + ')')
     return ''
 endfunc
 
@@ -295,12 +295,11 @@ try:
         for lcompleter in languagemgr.langcompleters:
             completions += lcompleter()
         completions += []
-        thistoken = token
-        replaceline = thisline[:(oldcursposx-len(thistoken))] + thisline[(oldcursposx):]
-        vim.current.line = replaceline
-        newpos = (oldcursposy, oldcursposx-len(thistoken))
-        vim.current.window.cursor = newpos
-        return completions
+        trunccomp = []
+        for c in completions:
+            if len(c) > len(token):
+                trunccomp.append(c[len(token):])
+        return trunccomp
 except:
     print('loading rlcompleter')
     import rlcompleter
@@ -339,24 +338,14 @@ except:
                 completions = list(set(completions))
             except:
                 pass
-            replaceline = thisline[:(oldcursposx-len(thistoken))] + thisline[(oldcursposx):]
-            vim.current.line = replaceline
-            newpos = (oldcursposy, oldcursposx-len(thistoken))
-            vim.current.window.cursor = newpos
         for lcompleter in languagemgr.langcompleters:
             completions += lcompleter()
-        return completions
+        trunccomp = []
+        for c in completions:
+            if len(c) > len(token):
+                trunccomp.append(c[len(token):])
+        return trunccomp
 
-def runfile(filename):
-    with open(filename) as f:
-        exec(f.read())
-    temp = locals()
-    for k in temp.keys():
-        globals()[k] = temp[k]
-
-def runfbackg(filename):
-    t = threading.Thread(target=runfile, args=(filename,))
-    t.start()
 
 EOL
 endfunc "end Vythonload
