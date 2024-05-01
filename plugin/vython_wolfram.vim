@@ -45,13 +45,15 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
     wolffunclist = list(wolfevexpr('functionslist'))
     def wolfsearchfuns(s):
         return [f for f in wolffunclist if s.lower() in f.lower()]
+    def wolfcompletefuns(s):
+        return [f for f in wolffunclist if len(f) >= len(s) and s == f[:len(s)]]
     def wolfcompleter(token=None):
         oldcursposy, oldcursposx = vim.current.window.cursor
         thisline = vim.current.line
         #if not token:
         token = thisline[:oldcursposx]
         token = re.split(';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
-        completions = wolfsearchfuns(token)
+        completions = wolfcompletefuns(token)
         return completions
     def wolfshow(istr, ext='png', tf=False):
         tfname = f"{vyth.hometmp}{np.random.randint(10000000)+hash(istr)}.{ext}"
