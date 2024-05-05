@@ -2,9 +2,9 @@ command Hy normal :call Hy()<cr>
 
 func! Hy()
 
-nnoremap <silent> <c-]>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.lex.read_str(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <c-]> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.lex.read_str(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <c-]>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.lex.read_str(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <c-]>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <c-]> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <c-]>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
 
 py3 << EOL
 
@@ -22,7 +22,7 @@ try:
 
     def hyeval(expr):
         try:
-            _hyexpr = hy.eval( hy.lex.read_str(expr) )
+            _hyexpr = hy.eval( hy.reader.read(expr) )
             return _hyexpr
         except Exception as e:
             return e
@@ -31,12 +31,7 @@ try:
     languagemgr.langevals.append(hyeval)
 
 except:
-    hy = _blank()
-    hy.flex = _blank()
-    def _dumfun(*args, **kwargs): pass
-    hy.eval = _dumfun
-    hy.flex.read_str = _dumfun
-    print('hy not installed')
+    print('hy not installed or working')
 
 EOL
 endfunc

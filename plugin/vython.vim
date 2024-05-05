@@ -71,12 +71,17 @@ def pjeval(expr):
         vyth.vyth_errlist.append(e)
 
     for langeval in languagemgr.langevals:
-        val = langeval(expr)
-        if 'error' in str(type(val)).lower():
+        try:
+            val = langeval(expr)
+        except Exception as e:
+            excpt = e
+            vyth.vyth_errlist.append(e)
+            continue
+        typeval = str(type(val)).lower()
+        if 'error' in typeval or 'exception' in typeval:
             vyth.vyth_errlist.append(val)
         else:
             return val
-
     print(excpt)
 
 if not hasattr(vim, 'find_module'):
@@ -286,7 +291,7 @@ try:
         oldcursposy, oldcursposx = vim.current.window.cursor
         thisline = vim.current.line
         token = thisline[:oldcursposx]
-        token = re.split(';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
+        token = re.split(r';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
         completions = [token] 
         try:
             completions += pycompleter.all_completions(token)

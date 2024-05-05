@@ -14,6 +14,7 @@ try:
         languagemgr.langlist  = []
         languagemgr.langevals = []
         languagemgr.langcompleters = []
+    os.environ['PYDEVD_DISABLE_FILE_VALIDATION'] = '1'
     from oct2py import Oct2Py
     _oct = Oct2Py()
     def octfiltcode():
@@ -27,7 +28,7 @@ try:
         thisline = vim.current.line
         #if not token:
         token = thisline[:oldcursposx]
-        token = re.split(';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
+        token = re.split(r';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
         completions = [] 
         try:
             ocompstr ='_ocomps = completion_matches("' + token + '")' 
