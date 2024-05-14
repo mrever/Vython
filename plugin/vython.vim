@@ -180,6 +180,11 @@ class vyth_outputter():
     def printexp(vyself):
         vyself.pybuf.append('') 
         lines = vim.eval("@p").strip().split('\n')
+        def prepnl(s):
+            if '\n' in s:
+                return '\n' + s
+            else:
+                return s
         for thisline in lines:
             thisexp = thisline.split('=')[0]
             try:
@@ -189,12 +194,14 @@ class vyth_outputter():
                     thisexp = thisexp[:-1]
                     if thisexp[-1] == '*':
                         thisexp = thisexp[:-1]
-                expout = thisexp.strip() + ' = ' + repr(pjeval(thisexp))
+                outstring = prepnl(repr(pjeval(thisexp)))
+                expout = thisexp.strip() + ' = ' + outstring
                 [vyself.pybuf.append(exp) for exp in expout.split('\n')] 
             except Exception as e1:
                 try:
                     thisexp = thisline.replace('\n','')
-                    expout = thisexp + ' = ' + repr(pjeval(thisexp))
+                    outstring = prepnl(repr(pjeval(thisexp)))
+                    expout = thisexp + ' = ' + outstring
                     [vyself.pybuf.append(exp) for exp in expout.split('\n')] 
                 except Exception as e:
                     print(e)
