@@ -50,7 +50,6 @@ import sys
 import os
 import re
 import threading
-import numpy as np
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -117,15 +116,17 @@ class vyth_outputter():
         vyself.pywin = vim.current.window
         vyself.oldlinecount = 0
         vyself.languages = ['python']
-        lappend = vyself.languages.append
         vyself.languages += languagemgr.langlist
         vyself.vyth_errlist = [] 
         # vyself.hometmp = os.path.expanduser('~') + '/tmp/'
-        vyself.hometmp = '/tmp/'
+        vyself.hometmp = '/tmp/vythfiles/'
         if not os.path.exists(vyself.hometmp):
-            os.mkdir(vyself.hometmp)
+            os.makedirs(vyself.hometmp)
         vyself.outhtml = False
         vyself.htmlbuff = []
+        vyself.selenium = False
+
+
 
     def output(vyself):
         vyself.pybuf.append('')
@@ -163,7 +164,7 @@ class vyth_outputter():
         vyself.oldlinecount = vyself.linecount-1
         vyself.scrollbuffend()
         if vyself.outhtml:
-            vyself.writebuffhtml(outstr, shownum=True)
+            vyself.writebuffhtml(outstr.replace('<', '&lt').replace('>', '&gt'), shownum=True)
 
     # only prints string that has content (for displaying Python execution results)
     def smartprint(vyself, stringtoprint):
@@ -197,12 +198,16 @@ class vyth_outputter():
                 outstring = prepnl(repr(pjeval(thisexp)))
                 expout = thisexp.strip() + ' = ' + outstring
                 [vyself.pybuf.append(exp) for exp in expout.split('\n')] 
+                if vyself.outhtml:
+                    vyself.writebuffhtml(expout.replace('<', '&lt').replace('>', '&gt'), shownum=True)
             except Exception as e1:
                 try:
                     thisexp = thisline.replace('\n','')
                     outstring = prepnl(repr(pjeval(thisexp)))
                     expout = thisexp + ' = ' + outstring
                     [vyself.pybuf.append(exp) for exp in expout.split('\n')] 
+                    if vyself.outhtml:
+                        vyself.writebuffhtml(expout.replace('<', '&lt').replace('>', '&gt'), shownum=True)
                 except Exception as e:
                     print(e)
                     [vyself.pybuf.append(thisexp.split('=')[0].strip() + " is not defined.")] 
@@ -247,19 +252,36 @@ class vyth_outputter():
         code = code.replace('\"', '\\\"')
         vim.command('let @p="' + code + '"')
 
+    def selenium_init(vyself):
+        from selenium import webdriver
+        vyself.browser = webdriver.Chrome()
+        vyself.refselenium()
+        vyself.selenium = True
+        vyself.outhtml = True
+
+    def refselenium(vyself):
+        vyself.browser.get(f'file:///C:{vyself.hometmp}pythonbuff.html')
+        vyself.browser.execute_script( "window.scrollTo(0, document.body.scrollHeight);" )
+
     def writebuffhtml(vyself, string, br=2, shownum=False):
         with open(vyself.hometmp + "pythonbuff.html", 'a') as f:
             if shownum:
-                string = 'Out [' + str(len(vyself.htmlbuff)+1) + ']: ' + string
+                string = 'Out [' + str(vyself.linecount) + ']: ' + string
+                #string = 'Out [' + str(len(vyself.htmlbuff)+1) + ']: ' + string
             f.write(string)
             f.write('<br>'*br)
             vyself.htmlbuff.append(string)
+        if vyself.selenium:
+            vyself.refselenium()
 
     def clearbuffhtml(vyself, string=''):
         with open(vyself.hometmp + "pythonbuff.html", 'w') as f:
             f.write(string)
             if string:
                 f.write('<br>'*5)
+        if vyself.selenium:
+            vyself.refselenium()
+            vyself.refselenium()
 
 
 def print(*args, **kwargs):

@@ -7,6 +7,10 @@ nnoremap <silent> <m-w>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 _wolf
 inoremap <silent> <m-w> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 _wolfsession.evaluate(wolffiltcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
 vnoremap <silent> <m-w>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 _wolfsession.evaluate(wolffiltcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
 
+nnoremap <silent> <m-b>      mPV"py:py3 wolfprintexp()<cr>`P
+inoremap <silent> <m-b> <esc>mPV"py:py3 wolfprintexp()<cr>`Pa
+vnoremap <silent> <m-b>       mP"py:py3 wolfprintexp()<cr>`P
+
 py3 << EOL
 try:
     import vim
@@ -55,7 +59,7 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
         token = re.split(';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
         completions = wolfcompletefuns(token)
         return completions
-    def wolfshow(istr, ext='png', tf=False):
+    def wolfshow(istr, ext='png', tf=False, shownum=False):
         tfname = f"{vyth.hometmp}{np.random.randint(10000000)+hash(istr)}.{ext}"
         estr = f'tfname=\"{tfname}\"'
         wolfevexpr( estr )
@@ -64,7 +68,7 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
         else:
             estr = f'Export[tfname, {istr}]'
         wolfevexpr( estr )
-        vyth.writebuffhtml(istr, br=1, shownum=True)
+        vyth.writebuffhtml(istr, br=1, shownum=shownum)
         if ext == 'wav':
             vyth.writebuffhtml(f'<audio controls><source src="{tfname}" type="audio/wav"></audio>',br=3)
         else:
@@ -73,6 +77,27 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
         wolfshow(istr, tf=True)
     def wolfaudio(istr):
         wolfshow(istr, ext='wav', tf=False)
+    def wolfprintexp():
+        vyth.pybuf.append('')
+        lines = vim.eval("@p").strip().split('\n')
+        for thisline in lines:
+            thisexp = thisline.split('=')[0]
+            try:
+                if '==' in thisline:
+                    thisexp = thisline
+                if thisexp[-1] in '+-*/':
+                    thisexp = thisexp[:-1]
+                    if thisexp[-1] == '*':
+                        thisexp = thisexp[:-1]
+                if vyth.outhtml:
+                    wolfshowtf(thisexp)
+                outstring = repr(wolfevexpr(thisexp))
+                expout = thisexp.strip() + ' = ' + outstring
+                [vyth.pybuf.append(exp) for exp in expout.split('\n')]
+            except Exception as e:
+                print(e)
+                [vyth.pybuf.append(thisexp.split('=')[0].strip() + " is not defined.")]
+            vyth.scrollbuffend()
 
     languagemgr.langlist.append("wolfram")
     languagemgr.langevals.append(wolfevexpr)
@@ -82,7 +107,7 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
 
 except Exception as e:
     print("wolframclient not installed or working")
-    #print(e)
+    print(e)
 
 
 EOL
