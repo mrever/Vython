@@ -14,6 +14,7 @@ vnoremap <silent> <m-b>       mP"py:py3 wolfprintexp()<cr>`P
 py3 << EOL
 try:
     import vim
+    import numpy as np
     if '_blank' not in globals():
         class _blank: pass
         languagemgr = _blank()
