@@ -264,7 +264,7 @@ class vyth_outputter():
         vyself.browser.execute_script( "window.scrollTo(0, document.body.scrollHeight);" )
 
     def writebuffhtml(vyself, string, br=2, shownum=False):
-        with open(vyself.hometmp + "pythonbuff.html", 'a') as f:
+        with open(vyself.hometmp + "pythonbuff.html", 'a', encoding='utf-8') as f:
             if shownum:
                 string = 'Out [' + str(vyself.linecount) + ']: ' + string
                 #string = 'Out [' + str(len(vyself.htmlbuff)+1) + ']: ' + string
