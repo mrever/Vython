@@ -72,17 +72,28 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
         vyth.writebuffhtml(istr, br=1, shownum=shownum)
         if ext == 'wav':
             vyth.writebuffhtml(f'<audio controls><source src="{tfname}" type="audio/wav"></audio>',br=3)
+        elif ext == 'tex':
+            with open(tfname, 'r') as f:
+                ltext = f.read().split('\n')
+                lstrip = ' '.join(ltext[11:-2]).strip()[2:-2]
+                lout = '\\(' + lstrip + '\\)'
+                vyth.writebuffhtml('<br>'*2+ lout  +'<br>'*2)
         else:
             vyth.writebuffhtml(f'<a href=""><img src="{os.path.basename(tfname)}"></a>',br=3)
     def wolfshowtf(istr):
         wolfshow(istr, tf=True)
     def wolfaudio(istr):
         wolfshow(istr, ext='wav', tf=False)
+    def wolftex(istr):
+        wolfshow(istr, ext='tex', tf=True)
     def wolfprintexp():
         vyth.pybuf.append('')
         lines = vim.eval("@p").strip().split('\n')
         for thisline in lines:
-            thisexp = thisline.split('=')[0]
+            if ':=' in thisline:
+                thisexp = thisline.split(':=')[0]
+            else:
+                thisexp = thisline.split('=')[0]
             try:
                 if '==' in thisline:
                     thisexp = thisline
@@ -91,7 +102,7 @@ functionslist = Flatten[Names[#] & /@ firstletters]; '''
                     if thisexp[-1] == '*':
                         thisexp = thisexp[:-1]
                 if vyth.outhtml:
-                    wolfshowtf(thisexp)
+                    wolftex(thisexp)
                 outstring = repr(wolfevexpr(thisexp))
                 expout = thisexp.strip() + ' = ' + outstring
                 [vyth.pybuf.append(exp) for exp in expout.split('\n')]

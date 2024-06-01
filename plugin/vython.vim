@@ -3,6 +3,9 @@ if has('python3')
 let $PYPLUGPATH .= expand('<sfile>:p:h') "used to import .py files from plugin directory
 
 command! Vython normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>
+command! VythonSelenium normal  :py3 vyth.selenium_init()<cr>
+command! VythonSeleniumOff normal  :py3 vyth.selenium=False<cr>
+command! VythonClear normal  :py3 vyth.clearbuffhtml()<cr>
 nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>
 
 func! Vythonload()
@@ -268,14 +271,18 @@ class vyth_outputter():
             if shownum:
                 string = 'Out [' + str(vyself.linecount) + ']: ' + string
                 #string = 'Out [' + str(len(vyself.htmlbuff)+1) + ']: ' + string
-            f.write(string)
+            f.write('<pre>')
+            f.write(string) #.replace('\n', '<br>'))
+            f.write('</pre>')
             f.write('<br>'*br)
             vyself.htmlbuff.append(string)
         if vyself.selenium:
             vyself.refselenium()
 
     def clearbuffhtml(vyself, string=''):
+        header = '<!DOCTYPE html>\n<html lang="en">\n<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">\n  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>\n  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>\n        with'
         with open(vyself.hometmp + "pythonbuff.html", 'w') as f:
+            f.write(header)
             f.write(string)
             if string:
                 f.write('<br>'*5)
