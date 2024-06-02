@@ -296,7 +296,6 @@ class vyth_outputter():
                 f.write('<br>'*5)
         if vyself.selenium:
             vyself.refselenium()
-            vyself.refselenium()
 
     def vimdebug(vyself):
         vim.debug = sys._getframe().f_back
