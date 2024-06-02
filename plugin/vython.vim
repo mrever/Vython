@@ -38,7 +38,7 @@ nmap <F9> mpGo<cr><s-insert><esc>V{<F8>uu:py3 vim.current.buffer.append("arr = "
 inoremap <c-u> <C-R>=Pycomplete()<CR>
 
 func! Pycomplete()
-    py3 vim.command("call complete(col('.'), " + repr(get_completions()) + ')')
+    py3 vim.command("call complete(col('.'), " + repr(vyth.get_completions()) + ')')
     return ''
 endfunc
 
@@ -52,7 +52,6 @@ import vim
 import sys
 import os
 import re
-import threading
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -128,8 +127,15 @@ class vyth_outputter():
         vyself.outhtml = False
         vyself.htmlbuff = []
         vyself.selenium = False
-
-
+        try:
+            from completer import IPCompleter # requires IPython; will use simpler rlcompleter if not available
+            vyself.icomplete = True
+            vyself.pycompleter = IPCompleter(namespace=locals(),global_namespace=globals())
+        except:
+            vyself.icomplete = False
+            import rlcompleter
+            vyself.pycompleter = rlcompleter.Completer()
+            print('loading rlcompleter')
 
     def output(vyself):
         vyself.pybuf.append('')
@@ -266,14 +272,16 @@ class vyth_outputter():
         vyself.browser.get(f'file:///C:{vyself.hometmp}pythonbuff.html')
         vyself.browser.execute_script( "window.scrollTo(0, document.body.scrollHeight);" )
 
-    def writebuffhtml(vyself, string, br=2, shownum=False):
+    def writebuffhtml(vyself, string, br=2, shownum=False, pre=True):
         with open(vyself.hometmp + "pythonbuff.html", 'a', encoding='utf-8') as f:
             if shownum:
                 string = 'Out [' + str(vyself.linecount) + ']: ' + string
                 #string = 'Out [' + str(len(vyself.htmlbuff)+1) + ']: ' + string
-            f.write('<pre>')
+            if pre:
+                f.write('<pre>')
             f.write(string) #.replace('\n', '<br>'))
-            f.write('</pre>')
+            if pre:
+                f.write('</pre>')
             f.write('<br>'*br)
             vyself.htmlbuff.append(string)
         if vyself.selenium:
@@ -290,6 +298,91 @@ class vyth_outputter():
             vyself.refselenium()
             vyself.refselenium()
 
+    def vimdebug(vyself):
+        vim.debug = sys._getframe().f_back
+        if '<module>' not in vim.debug.f_code.co_name:
+            vim.oldglobals = list(globals().keys())
+            for k in vim.debug.f_locals.keys():
+                globals()[k] = vim.debug.f_locals[k]
+            try:
+                globals()['self_'] = vyself
+            except:
+                pass
+        else:
+            vim.oldglobals = None
+        vim.command('normal ' + str(vim.debug.f_lineno) + 'gg')
+        raise Exception('Debugging in "' + vim.debug.f_code.co_name + '" at line number   ' 
+                            + str(vim.debug.f_lineno) )
+
+    def endvimdebug(vyself):
+        if vim.oldglobals:
+            gkeys = list(globals().keys())
+            for k in gkeys:
+                if k not in vim.oldglobals:
+                    globals().pop(k)
+
+    def get_completions(vyself):
+        pycompleter = vyself.pycompleter
+        if vyself.icomplete:
+            oldcursposy, oldcursposx = vim.current.window.cursor
+            thisline = vim.current.line
+            token = thisline[:oldcursposx]
+            token = re.split(r';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
+            completions = [token] 
+            try:
+                completions += pycompleter.all_completions(token)
+            except:
+                pass
+            for lcompleter in languagemgr.langcompleters:
+                completions += lcompleter()
+            completions += []
+            trunccomp = []
+            for c in completions:
+                if len(c) > len(token):
+                    trunccomp.append(c[len(token):])
+            return trunccomp
+        else:
+            oldcursposy, oldcursposx = vim.current.window.cursor
+            thisline = vim.current.line
+            token = thisline[:oldcursposx][::-1]
+            if token[:2] == "'[":
+                token = token[2:]
+                getkeys = True
+            else:
+                getkeys = False
+            try:
+                stop = re.search('[^A-Za-z0-9_.]', token).start()
+            except:
+                stop = None
+            thistoken = token[:stop][::-1]
+            completions = [thistoken]
+            if getkeys:
+                try:
+                    completions += list( eval(thistoken + '.keys()') )
+                    completions = completions[1:]
+                    completions = [c +"']" for c in completions]
+                except:
+                    pass
+            else:
+                cindex = 0
+                comp = pycompleter.complete(thistoken,cindex)
+                while comp != None:
+                    completions.append(comp)
+                    cindex += 1
+                    comp = pycompleter.complete(thistoken,cindex)
+                try:
+                    completions += dir(eval(thistoken))
+                    completions = list(set(completions))
+                except:
+                    pass
+            for lcompleter in languagemgr.langcompleters:
+                completions += lcompleter()
+            trunccomp = []
+            for c in completions:
+                if len(c) > len(token):
+                    trunccomp.append(c[len(token):])
+            return trunccomp
+
 
 def print(*args, **kwargs):
     vyth.mprint(*args, **kwargs)
@@ -297,95 +390,6 @@ def print(*args, **kwargs):
 
 vyth = vyth_outputter()
 
-def vimdebug():
-    vim.debug = sys._getframe().f_back
-    if '<module>' not in vim.debug.f_code.co_name:
-        vim.oldglobals = list(globals().keys())
-        for k in vim.debug.f_locals.keys():
-            globals()[k] = vim.debug.f_locals[k]
-        try:
-            globals()['self_'] = vyself
-        except:
-            pass
-    else:
-        vim.oldglobals = None
-    vim.command('normal ' + str(vim.debug.f_lineno) + 'gg')
-    raise Exception('Debugging in "' + vim.debug.f_code.co_name + '" at line number   ' 
-                        + str(vim.debug.f_lineno) )
-
-def endvimdebug():
-    if vim.oldglobals:
-        gkeys = list(globals().keys())
-        for k in gkeys:
-            if k not in vim.oldglobals:
-                globals().pop(k)
-
-try:
-    from completer import IPCompleter # requires IPython; will use simpler rlcompleter if not available
-    def get_completions():
-        pycompleter = IPCompleter(namespace=locals(),global_namespace=globals())
-        oldcursposy, oldcursposx = vim.current.window.cursor
-        thisline = vim.current.line
-        token = thisline[:oldcursposx]
-        token = re.split(r';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
-        completions = [token] 
-        try:
-            completions += pycompleter.all_completions(token)
-        except:
-            pass
-        for lcompleter in languagemgr.langcompleters:
-            completions += lcompleter()
-        completions += []
-        trunccomp = []
-        for c in completions:
-            if len(c) > len(token):
-                trunccomp.append(c[len(token):])
-        return trunccomp
-except:
-    print('loading rlcompleter')
-    import rlcompleter
-    def get_completions():
-        rlcmpltr = rlcompleter.Completer()
-        oldcursposy, oldcursposx = vim.current.window.cursor
-        thisline = vim.current.line
-        token = thisline[:oldcursposx][::-1]
-        if token[:2] == "'[":
-            token = token[2:]
-            getkeys = True
-        else:
-            getkeys = False
-        try:
-            stop = re.search('[^A-Za-z0-9_.]', token).start()
-        except:
-            stop = None
-        thistoken = token[:stop][::-1]
-        completions = [thistoken]
-        if getkeys:
-            try:
-                completions += list( eval(thistoken + '.keys()') )
-                completions = completions[1:]
-                completions = [c +"']" for c in completions]
-            except:
-                pass
-        else:
-            cindex = 0
-            comp = rlcmpltr.complete(thistoken,cindex)
-            while comp != None:
-                completions.append(comp)
-                cindex += 1
-                comp = rlcmpltr.complete(thistoken,cindex)
-            try:
-                completions += dir(eval(thistoken))
-                completions = list(set(completions))
-            except:
-                pass
-        for lcompleter in languagemgr.langcompleters:
-            completions += lcompleter()
-        trunccomp = []
-        for c in completions:
-            if len(c) > len(token):
-                trunccomp.append(c[len(token):])
-        return trunccomp
 
 
 EOL

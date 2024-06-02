@@ -15,6 +15,8 @@ try:
         languagemgr.langevals = []
         languagemgr.langcompleters = []
     os.environ['PYDEVD_DISABLE_FILE_VALIDATION'] = '1'
+    import vim
+    import re
     from oct2py import Oct2Py
     _oct = Oct2Py()
     def octfiltcode():
