@@ -4,7 +4,7 @@ let $PYPLUGPATH .= expand('<sfile>:p:h') "used to import .py files from plugin d
 
 command! Vython normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>
 command! VythonSelenium normal  :py3 vyth.selenium_init()<cr>
-command! VythonSeleniumOff normal  :py3 vyth.selenium=False<cr>
+command! VythonSeleniumOff normal  :py3 vyth.selenium=False; vyth.outhtml=False<cr>
 command! VythonClear normal  :py3 vyth.clearbuffhtml()<cr>
 nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>
 

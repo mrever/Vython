@@ -56,6 +56,12 @@ try:
             ostr = self.wlexport(outdat).decode()
             cstr = f"{vname}:={ostr}"
             self.wolfevexpr(cstr)
+        def wolfsetvars(self): # first attempt, will produce lots of warnings
+            wtypes = [int, float, bool, np.ndarray, tuple, list, str, np.matrix] #list
+            for k in globals().keys():
+                # print(k, type(globals()[k]), type(globals()[k]) in wtypes)
+                if type(globals()[k]) in wtypes:
+                    self.wolfsetvar(k)
         def wolfsearchfuns(self, s):
             return [f for f in self.wolffunclist if s.lower() in f.lower()]
         def wolfcompletefuns(self, s):
