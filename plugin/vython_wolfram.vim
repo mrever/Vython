@@ -46,12 +46,14 @@ try:
             return '\n'.join(code)
         def wolfevexpr(self, expr):
             return self.session.evaluate(expr)
-        def wolfsetvar(self, vname, dat):
+        def wolfsetvar(self, vname, dat=None):
+            if dat is None:
+                dat = eval(vname)
             if type(dat) == np.ndarray:
                 outdat = dat.tolist()
             else:
                 outdat = dat
-            ostr = _wlexport(outdat).decode()
+            ostr = self.wlexport(outdat).decode()
             cstr = f"{vname}:={ostr}"
             self.wolfevexpr(cstr)
         def wolfsearchfuns(self, s):
@@ -83,7 +85,7 @@ try:
                     ltext = f.read().split('\n')
                     lstrip = ' '.join(ltext[11:-2]).strip()[2:-2]
                     lout = '\\(' + lstrip + '\\)'
-                    vyth.writebuffhtml('<br>'*2+ lout  +'<br>'*2, pre=False)
+                    vyth.writebuffhtml('<br>'*2+ lout + '<br>'*2, pre=False)
             else:
                 vyth.writebuffhtml(f'<a href=""><img src="{os.path.basename(tfname)}"></a>',br=3, pre=False)
         def wolfshowtf(self, istr):
