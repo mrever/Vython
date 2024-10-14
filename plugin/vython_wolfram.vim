@@ -21,6 +21,7 @@ try:
         languagemgr.langlist  = []
         languagemgr.langevals = []
         languagemgr.langcompleters = []
+    import wolframclient
     class vython_wolfram:
         def __init__(self):
             from wolframclient.evaluation import WolframLanguageSession
@@ -75,6 +76,7 @@ try:
             completions = self.wolfcompletefuns(token)
             return completions
         def wolfshow(self, istr, ext='png', tf=False, shownum=False):
+            #vyth.vimdebug()
             tfname = f"{vyth.hometmp}{np.random.randint(10000000)+hash(istr)}.{ext}"
             estr = f'tfname=\"{tfname}\"'
             self.wolfevexpr( estr )
@@ -115,6 +117,12 @@ try:
                         thisexp = thisexp[:-1]
                         if thisexp[-1] == '*':
                             thisexp = thisexp[:-1]
+                    if self.wolfevexpr(f'Head @ {thisexp}') == wolframclient.language.expression.WLSymbol('Sound'):
+                        self.wolfaudio(thisexp)
+                        return
+                    if self.wolfevexpr(f'Head @ {thisexp}') == wolframclient.language.expression.WLSymbol('Graphics'):
+                        self.wolfshow(thisexp)
+                        return
                     if vyth.outhtml:
                         self.wolftex(thisexp)
                     outstring = repr(self.wolfevexpr(thisexp))
