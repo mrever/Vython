@@ -198,7 +198,7 @@ class vyth_outputter():
         for thisline in lines:
             thisexp = thisline.split('=')[0]
             try:
-                if '==' in thisline:
+                if '==' in thisline or '(' in thisline.split('=')[0]:
                     thisexp = thisline
                 if thisexp[-1] in '+-*/':
                     thisexp = thisexp[:-1]
