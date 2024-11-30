@@ -72,7 +72,7 @@ try:
             thisline = vim.current.line
             #if not token:
             token = thisline[:oldcursposx]
-            token = re.split(';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
+            token = re.split(r';| |:|~|%|,|\+|-|\*|/|&|\||\(|\)=',token)[-1]
             completions = self.wolfcompletefuns(token)
             return completions
         def wolfshow(self, istr, ext='png', tf=False, shownum=False):

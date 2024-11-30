@@ -1,4 +1,4 @@
-command R normal :call R()<cr>
+command! R normal :call R()<cr>
 
 func! R()
 
