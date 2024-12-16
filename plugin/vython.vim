@@ -30,6 +30,8 @@ nmap <m-b> <c-b>
 imap <m-b> <c-b>
 vmap <m-b> <c-b>
 
+vnoremap <silent> <F1>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(f'help({filtcode()})')<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+
 nnoremap <silent> <F8> mP{V}"py:py3 vyth.readtable()<cr>`P
 vnoremap <silent> <F8> mP"py:py3 vyth.readtable()<cr>`P
 "nmap <F9> <s-insert>V}<F8>gvx:py3 vim.current.buffer.append(repr(vyth.table))<cr>j
