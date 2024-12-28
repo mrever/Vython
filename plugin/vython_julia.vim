@@ -1,4 +1,4 @@
-command Julia normal :call Julia()<cr>
+command Julia normal :call Julia()<cr>:echo "m-\\ to execute julia"<cr>
 
 func! Julia()
 

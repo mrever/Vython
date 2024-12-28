@@ -1,4 +1,4 @@
-command Lua normal :call Lua()<cr>
+command Lua normal :call Lua()<cr>:echo "m-/ to execute lua"<cr>
 
 func! Lua()
 

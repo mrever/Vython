@@ -1,4 +1,4 @@
-command Wolfram normal :call Wolfram()<cr>
+command Wolfram normal :call Wolfram()<cr>:echo "m-w to execute WolframLanguage"<cr>
 command WolframExit normal :py3 vywolf.session.terminate()<cr>
 
 func! Wolfram()

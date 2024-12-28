@@ -1,4 +1,4 @@
-command! R normal :call R()<cr>
+command! R normal :call R()<cr>:echo "m-' to execute R"<cr>
 
 func! R()
 

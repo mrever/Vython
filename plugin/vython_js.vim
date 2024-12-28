@@ -1,4 +1,4 @@
-command Js normal :call Js()<cr>
+command Js normal :call Js()<cr>:echo "m-] to execute javascript"<cr>
 
 func! Js()
 
