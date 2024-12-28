@@ -1,7 +1,7 @@
 # Volyglot
 ## Use Vim as a Jupyter-like shell for Python and other languages
 
-Volyglot -- Vim + polyglot **Speaking, writing, written in, or composed of several languages**
+Volyglot -- Vim + polyglot (***Speaking, writing, written in, or composed of several languages***)
 
 *Features:*
 
