@@ -1,4 +1,4 @@
-command Octave normal :call Octave()<cr>
+command Octave normal :call Octave()<cr>:echo "m-; to exectue octave"<cr>
 
 func! Octave()
 

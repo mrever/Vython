@@ -1,4 +1,4 @@
-command Hy normal :call Hy()<cr>
+command Hy normal :call Hy()<cr>:echo "c-] to execute hy"<cr>
 
 func! Hy()
 
