@@ -2,9 +2,9 @@ command Octave normal :call Octave()<cr>:echo "m-; to exectue octave"<cr>
 
 func! Octave()
 
-nnoremap <silent> <m-;>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-;> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-;>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <m-;>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-;> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-;>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 py3 << EOL
 try:

@@ -3,9 +3,9 @@ command WolframExit normal :py3 vywolf.session.terminate()<cr>
 
 func! Wolfram()
 
-nnoremap <silent> <m-w>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 vywolf.session.evaluate(vywolf.wolffiltcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-w> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 vywolf.session.evaluate(vywolf.wolffiltcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-w>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 vywolf.session.evaluate(vywolf.wolffiltcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <m-w>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 vywolf.session.evaluate(vywolf.wolffiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-w> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 vywolf.session.evaluate(vywolf.wolffiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-w>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 vywolf.session.evaluate(vywolf.wolffiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 nnoremap <silent> <m-b>      mPV"py:py3 vywolf.wolfprintexp()<cr>`P
 inoremap <silent> <m-b> <esc>mPV"py:py3 vywolf.wolfprintexp()<cr>`Pa
@@ -22,7 +22,7 @@ try:
         languagemgr.langevals = []
         languagemgr.langcompleters = []
     import wolframclient
-    class vython_wolfram:
+    class volyglot_wolfram:
         def __init__(self):
             from wolframclient.evaluation import WolframLanguageSession
             from wolframclient.deserializers import WXFConsumerNumpy
@@ -76,8 +76,8 @@ try:
             completions = self.wolfcompletefuns(token)
             return completions
         def wolfshow(self, istr, ext='png', tf=False, shownum=False):
-            #vyth.vimdebug()
-            tfname = f"{vyth.hometmp}{np.random.randint(10000000)+hash(istr)}.{ext}"
+            #voly.vimdebug()
+            tfname = f"{voly.hometmp}{np.random.randint(10000000)+hash(istr)}.{ext}"
             estr = f'tfname=\"{tfname}\"'
             self.wolfevexpr( estr )
             if tf:
@@ -85,17 +85,17 @@ try:
             else:
                 estr = f'Export[tfname, {istr}]'
             self.wolfevexpr( estr )
-            vyth.writebuffhtml(istr, br=1, shownum=shownum)
+            voly.writebuffhtml(istr, br=1, shownum=shownum)
             if ext == 'wav':
-                vyth.writebuffhtml(f'<audio controls><source src="{tfname}" type="audio/wav"></audio>',br=3, pre=False)
+                voly.writebuffhtml(f'<audio controls><source src="{tfname}" type="audio/wav"></audio>',br=3, pre=False)
             elif ext == 'tex':
                 with open(tfname, 'r') as f:
                     ltext = f.read().split('\n')
                     lstrip = ' '.join(ltext[11:-2]).strip()[2:-2]
                     lout = '\\(' + lstrip + '\\)'
-                    vyth.writebuffhtml('<br>'*2+ lout + '<br>'*2, pre=False)
+                    voly.writebuffhtml('<br>'*2+ lout + '<br>'*2, pre=False)
             else:
-                vyth.writebuffhtml(f'<a href=""><img src="{os.path.basename(tfname)}"></a>',br=3, pre=False)
+                voly.writebuffhtml(f'<a href=""><img src="{os.path.basename(tfname)}"></a>',br=3, pre=False)
         def wolfshowtf(self, istr):
             self.wolfshow(istr, tf=True)
         def wolfaudio(self, istr):
@@ -103,7 +103,7 @@ try:
         def wolftex(self, istr):
             self.wolfshow(istr, ext='tex', tf=True)
         def wolfprintexp(self):
-            vyth.pybuf.append('')
+            voly.pybuf.append('')
             lines = vim.eval("@p").strip().split('\n')
             for thisline in lines:
                 if ':=' in thisline:
@@ -123,16 +123,16 @@ try:
                     if self.wolfevexpr(f'Head @ {thisexp}') == wolframclient.language.expression.WLSymbol('Graphics'):
                         self.wolfshow(thisexp)
                         return
-                    if vyth.outhtml:
+                    if voly.outhtml:
                         self.wolftex(thisexp)
                     outstring = repr(self.wolfevexpr(thisexp))
                     expout = thisexp.strip() + ' = ' + outstring
-                    [vyth.pybuf.append(exp) for exp in expout.split('\n')]
+                    [voly.pybuf.append(exp) for exp in expout.split('\n')]
                 except Exception as e:
                     print(e)
-                    [vyth.pybuf.append(thisexp.split('=')[0].strip() + " is not defined.")]
-                vyth.scrollbuffend()
-    vywolf = vython_wolfram()
+                    [voly.pybuf.append(thisexp.split('=')[0].strip() + " is not defined.")]
+                voly.scrollbuffend()
+    vywolf = volyglot_wolfram()
 
     languagemgr.langlist.append("wolfram")
     languagemgr.langevals.append(vywolf.wolfevexpr)

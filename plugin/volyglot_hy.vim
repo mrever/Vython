@@ -2,9 +2,9 @@ command Hy normal :call Hy()<cr>:echo "c-] to execute hy"<cr>
 
 func! Hy()
 
-nnoremap <silent> <c-]>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <c-]> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <c-]>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <c-]>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <c-]> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <c-]>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 hy.eval( hy.reader.read(hyfiltcode()) )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 py3 << EOL
 

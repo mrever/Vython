@@ -1,7 +1,9 @@
-# Vython
-Use Vim as a Python shell--like Jupyter but it's in Vim.
+# Volyglot
+## Use Vim as a Jupyter-like shell for Python and other languages
 
-Features:
+Volyglot -- Vim + polyglot **Speaking, writing, written in, or composed of several languages**
+
+*Features:*
 
 -Executes Python files, individual lines, or blocks (via visual mode) within the Vim editor  
 -Displays the output in a separate buffer/window  
@@ -11,6 +13,7 @@ Features:
 
 Additional Features (2024):  
 -Can execute [Coconut](http://coconut-lang.org/) just like plain Python if Coconut is installed  
+-Similar with [SageMath][https://www.sagemath.org/]
 -[Hy](https://docs.hylang.org/en/alpha/) support, just use <c-]>, assuming Hy is installed  
 -Julia support if Julia/PyJulia are set up.  Use <m-\\>.  <c-b> and <c-u> (evaluate-and-print, and completions) work just the same between Julia and Python (run :Julia to start)  
 -Octave support similar to Julia  
@@ -26,7 +29,7 @@ Requirements:
 -----------------
 Default bindings/commands:
 -----------------
-:Vython   ---initialize Vython, create new pane/buffer for outputs  
+:Volyglot   ---initialize Volyglot, create new pane/buffer for outputs  
 \<F10\>     ---same as above  
   
 \<F5\>      ---execute entire file  

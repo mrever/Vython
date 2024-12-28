@@ -19,7 +19,7 @@ try:
 
     def filtcode():
         global _sage_On_
-        vyth.removeindent()
+        voly.removeindent()
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
         code = [q for q in code if q and len(q.strip())>0 and q.strip()[0]!='!']
         #try:

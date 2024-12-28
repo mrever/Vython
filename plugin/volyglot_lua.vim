@@ -3,9 +3,9 @@ command Lua normal :call Lua()<cr>:echo "m-/ to execute lua"<cr>
 func! Lua()
 
 if has('lua')
-nnoremap <silent> <m-/>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-/> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-/>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <m-/>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-/> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-/>       mP"py:py3 voly.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
  
 lua << EOLUA
 function luafiltcode()

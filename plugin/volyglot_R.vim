@@ -2,9 +2,9 @@ command! R normal :call R()<cr>:echo "m-' to execute R"<cr>
 
 func! R()
 
-nnoremap <silent> <m-'>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-'> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-'>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <m-'>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-'> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-'>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 py3 << EOL
 try:

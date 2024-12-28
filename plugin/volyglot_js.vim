@@ -2,9 +2,9 @@ command Js normal :call Js()<cr>:echo "m-] to execute javascript"<cr>
 
 func! Js()
 
-nnoremap <silent> <m-]>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-]> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-]>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <m-]>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-]> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-]>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(jstrans(jsfiltcode()))<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 py3 << EOL
 try:

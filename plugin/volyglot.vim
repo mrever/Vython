@@ -2,45 +2,45 @@ if has('python3')
 
 let $PYPLUGPATH .= expand('<sfile>:p:h') "used to import .py files from plugin directory
 
-command! Vython normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>:echo "c-\\ to execute python, m-enter to execute vimscript"<cr>
-command! VythonSelenium normal  :py3 vyth.selenium_init()<cr>
-command! VythonSeleniumOff normal  :py3 vyth.selenium=False; vyth.outhtml=False<cr>
-command! VythonClear normal  :py3 vyth.clearbuffhtml()<cr>
-nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Vythonload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>:echo "c-\\ to execute python, m-enter to execute vimscript"<cr>
+command! Volyglot normal  :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Volyglotload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>:echo "c-\\ to execute python, m-enter to execute vimscript"<cr>
+command! VolyglotSelenium normal  :py3 voly.selenium_init()<cr>
+command! VolyglotSeleniumOff normal  :py3 voly.selenium=False; voly.outhtml=False<cr>
+command! VolyglotClear normal  :py3 voly.clearbuffhtml()<cr>
+nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Volyglotload()<cr>:sp<cr>:e test.py<cr><c-w><c-h>:set filetype=python<cr>:echo "c-\\ to execute python, m-enter to execute vimscript"<cr>
 
-func! Vythonload()
+func! Volyglotload()
 
-nnoremap <silent> <F5>      mPggVG"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <F5> <esc>mPggVG"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <F5> mP<esc>ggVG"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <F5>      mPggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <F5> <esc>mPggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <F5> mP<esc>ggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
-nnoremap <silent> <s-enter>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <s-enter> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <s-enter>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <s-enter>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <s-enter> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <s-enter>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 "alternate mappings for terminal/ssh usage
-nnoremap <silent> <c-\>      mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <c-\> <esc>mPV"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <c-\>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <c-\>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <c-\> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <c-\>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
-nnoremap <silent> <c-b>      mPV"py:py3 vyth.printexp()<cr>`P
-inoremap <silent> <c-b> <esc>mPV"py:py3 vyth.printexp()<cr>`Pa
-vnoremap <silent> <c-b>       mP"py:py3 vyth.printexp()<cr>`P
+nnoremap <silent> <c-b>      mPV"py:py3 voly.printexp()<cr>`P
+inoremap <silent> <c-b> <esc>mPV"py:py3 voly.printexp()<cr>`Pa
+vnoremap <silent> <c-b>       mP"py:py3 voly.printexp()<cr>`P
 "alternate mappings for tmux users
 nmap <m-b> <c-b>
 imap <m-b> <c-b>
 vmap <m-b> <c-b>
 
-vnoremap <silent> <F1>       mP"py:py3 vyth.output()<cr>:redir @b<cr>:py3 exec(f'help({filtcode()})')<cr>:redir END<cr>:py3 vyth.smartprint(vim.eval("@b"))<cr>`P
+vnoremap <silent> <F1>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(f'help({filtcode()})')<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
-nnoremap <silent> <F8> mP{V}"py:py3 vyth.readtable()<cr>`P
-vnoremap <silent> <F8> mP"py:py3 vyth.readtable()<cr>`P
-"nmap <F9> <s-insert>V}<F8>gvx:py3 vim.current.buffer.append(repr(vyth.table))<cr>j
-nmap <F9> mpGo<cr><s-insert><esc>V{<F8>uu:py3 vim.current.buffer.append("arr = " + repr(vyth.table))<cr>Gdd`pp
+nnoremap <silent> <F8> mP{V}"py:py3 voly.readtable()<cr>`P
+vnoremap <silent> <F8> mP"py:py3 voly.readtable()<cr>`P
+"nmap <F9> <s-insert>V}<F8>gvx:py3 vim.current.buffer.append(repr(voly.table))<cr>j
+nmap <F9> mpGo<cr><s-insert><esc>V{<F8>uu:py3 vim.current.buffer.append("arr = " + repr(voly.table))<cr>Gdd`pp
 
 inoremap <c-u> <C-R>=Pycomplete()<CR>
 
 func! Pycomplete()
-    py3 vim.command("call complete(col('.'), " + repr(vyth.get_completions()) + ')')
+    py3 vim.command("call complete(col('.'), " + repr(voly.get_completions()) + ')')
     return ''
 endfunc
 
@@ -66,23 +66,23 @@ if '_blank' not in globals():
 
 # try to evaluate expressions for different languages
 def pjeval(expr):
-    vyth.vyth_errlist = []
+    voly.voly_errlist = []
     try: 
         return eval(expr)
     except Exception as e:
         excpt = e
-        vyth.vyth_errlist.append(e)
+        voly.voly_errlist.append(e)
 
     for langeval in languagemgr.langevals:
         try:
             val = langeval(expr)
         except Exception as e:
             excpt = e
-            vyth.vyth_errlist.append(e)
+            voly.voly_errlist.append(e)
             continue
         typeval = str(type(val)).lower()
         if 'error' in typeval or 'exception' in typeval:
-            vyth.vyth_errlist.append(val)
+            voly.voly_errlist.append(val)
         else:
             return val
     print(excpt)
@@ -103,7 +103,7 @@ if os.getcwd().lower() == 'C:\\WINDOWS\\system32'.lower():
 
 if 'filtcode' not in globals():
     def filtcode():
-        vyth.removeindent()
+        voly.removeindent()
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
         code = [q for q in code if q and len(q.strip())>0 and q.strip()[0]!='!']
         #try:
@@ -113,7 +113,7 @@ if 'filtcode' not in globals():
         return parsedout
 
 
-class vyth_outputter():
+class voly_outputter():
     def __init__(vyself):
         vyself.linecount = 1
         vyself.pybuf = vim.current.buffer
@@ -121,9 +121,9 @@ class vyth_outputter():
         vyself.oldlinecount = 0
         vyself.languages = ['python']
         vyself.languages += languagemgr.langlist
-        vyself.vyth_errlist = [] 
+        vyself.voly_errlist = [] 
         # vyself.hometmp = os.path.expanduser('~') + '/tmp/'
-        vyself.hometmp = '/tmp/vythfiles/'
+        vyself.hometmp = '/tmp/volyfiles/'
         if not os.path.exists(vyself.hometmp):
             os.makedirs(vyself.hometmp)
         vyself.outhtml = False
@@ -386,14 +386,14 @@ class vyth_outputter():
 
 
 def print(*args, **kwargs):
-    vyth.mprint(*args, **kwargs)
+    voly.mprint(*args, **kwargs)
     vim.command('redraw')
 
-vyth = vyth_outputter()
+voly = voly_outputter()
 
 
 
 EOL
-endfunc "end Vythonload
+endfunc "end Volyglotload
 
 endif
