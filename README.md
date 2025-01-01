@@ -42,7 +42,7 @@ For python (or sage or coconut):
 <c-]> hy  
 <m-]> javascript  
 <m-\> julia  
-<m-/> lua  
+\<m-/\> lua  
 <m-;> octave  
 <m-'> R  
 <m-enter> vimscript  
