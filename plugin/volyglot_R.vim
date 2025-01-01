@@ -2,9 +2,9 @@ command! R normal :call R()<cr>:echo "m-' to execute R"<cr>
 
 func! R()
 
-nnoremap <silent> <m-'>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-'> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-'>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <m-'>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( _rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-'> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( _rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-'>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 robjects.r( _rfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 py3 << EOL
 try:
@@ -16,13 +16,13 @@ try:
         languagemgr.langcompleters = []
     import rpy2
     import rpy2.robjects as robjects
-    def rfiltcode():
+    def _rfiltcode():
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
         return '\n'.join(code)
-    def revexpr(expr):
+    def _revexpr(expr):
         return robjects.r(expr)
     languagemgr.langlist.append("R")
-    languagemgr.langevals.append(revexpr)
+    languagemgr.langevals.append(_revexpr)
 except Exception as e:
     print("rpy2 not installed or working")
     #print(e)

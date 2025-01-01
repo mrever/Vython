@@ -2,21 +2,31 @@ command Lua normal :call Lua()<cr>:echo "m-/ to execute lua"<cr>
 
 func! Lua()
 
-if has('lua')
-nnoremap <silent> <m-/>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-/> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-/>       mP"py:py3 voly.output()<cr>:redir @b<cr>:lua load(luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+if has('lua') || has('nvim')
+nnoremap <silent> <m-/>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:lua load(_luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-/> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:lua load(_luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-/>       mP"py:py3 voly.output()<cr>:redir @b<cr>:lua load(_luafiltcode())()<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
  
+if has('lua')
 lua << EOLUA
-function luafiltcode()
+function _luafiltcode()
     return vim.eval("@p")
 end
 EOLUA
+endif
+
+if has('nvim')
+lua << EOLUA
+function _luafiltcode()
+    return vim.fn.getreg("p")
+end
+EOLUA
+endif
 
 py3 << EOL
 import vim
 
-def luaexec(luastring):
+def _luaevalhelp(luastring):
     vim.command('redir @b')
     vim.command(f'lua print(type({luastring}))')
     vim.command('redir END')
@@ -43,9 +53,9 @@ def luaexec(luastring):
 
 
 
-def luaeval(expr):
+def _luaeval(expr):
     try:
-        _luaeexpr = luaexec(expr)
+        _luaeexpr = _luaevalhelp(expr)
         return _luaeexpr
     except Exception as e:
         return e
@@ -58,7 +68,7 @@ if '_blank' not in globals():
     languagemgr.langcompleters = []
 
 languagemgr.langlist.append("lua")
-languagemgr.langevals.append(luaeval)
+languagemgr.langevals.append(_luaeval)
 
 EOL
 

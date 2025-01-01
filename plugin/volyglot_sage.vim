@@ -6,7 +6,7 @@ py3 << EOL
 _sage_On_ = True
 try:
     from sage.all import *
-    def sageparse(sagestr):
+    def _sageparse(sagestr):
         return '\n'.join(preparse(sagestr).split('\n')[:])
     if '_blank' not in globals():
         class _blank: pass
@@ -27,12 +27,12 @@ try:
         if _coconut_On_:
             parsedout = cocoparse(parsedout)
         if _sage_On_:
-            parsedout = sageparse(parsedout)
+            parsedout = _sageparse(parsedout)
         #except:
             #parsedout = ('\n'.join(code))
         return parsedout
 except:
-    sageparse = lambda x: x
+    _sageparse = lambda x: x
     print('sage not installed')
 
 EOL

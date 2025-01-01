@@ -2,9 +2,9 @@ command Octave normal :call Octave()<cr>:echo "m-; to exectue octave"<cr>
 
 func! Octave()
 
-nnoremap <silent> <m-;>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-;> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-;>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <m-;>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( _octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-;> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( _octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-;>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 _oct.eval( _octfiltcode() )<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 py3 << EOL
 try:
@@ -19,13 +19,13 @@ try:
     import re
     from oct2py import Oct2Py
     _oct = Oct2Py()
-    def octfiltcode():
+    def _octfiltcode():
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
         return '\n'.join(code)
-    def octevexpr(expr):
+    def _octevexpr(expr):
         _oct.eval('_dum_ =' + expr + ';')
         return _oct.pull('_dum_')
-    def octavecompleter(token=None):
+    def _octavecompleter(token=None):
         oldcursposy, oldcursposx = vim.current.window.cursor
         thisline = vim.current.line
         #if not token:
@@ -48,8 +48,8 @@ try:
         except Exception as e:
             return []
     languagemgr.langlist.append("octave")
-    languagemgr.langevals.append(octevexpr)
-    languagemgr.langcompleters.append(octavecompleter)
+    languagemgr.langevals.append(_octevexpr)
+    languagemgr.langcompleters.append(_octavecompleter)
 except Exception as e:
     print("oct2py not installed or working")
     #print(e)

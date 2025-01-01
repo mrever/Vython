@@ -2,9 +2,9 @@ command Julia normal :call Julia()<cr>:echo "m-\\ to execute julia"<cr>
 
 func! Julia()
 
-nnoremap <silent> <m-\>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <m-\> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <m-\>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 _jeval(juliafiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <m-\>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _jeval(_juliafiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <m-\> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 _jeval(_juliafiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <m-\>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 _jeval(_juliafiltcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 py3 << EOL
 try:
@@ -15,7 +15,7 @@ try:
         languagemgr.langevals = []
         languagemgr.langcompleters = []
     import vim
-    from julia import Main as jumain
+    from julia import Main as _jumain
 
     nprint = '''
     import Base.print
@@ -42,23 +42,23 @@ try:
     using REPL
     '''
 
-    jumain.eval(nprint)
+    _jumain.eval(nprint)
     def _resjprint():
-        jumain.eval('pyoutstr = ""')
+        _jumain.eval('pyoutstr = ""')
     _resjprint()
 
     def _jeval(jcode):
         _resjprint()
-        julout = jumain.eval(jcode)
-        out = jumain.eval('print("")')
+        julout = _jumain.eval(jcode)
+        out = _jumain.eval('print("")')
         print(out)
         return julout
 
-    def juliafiltcode():
+    def _juliafiltcode():
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
         return '\n'.join(code)
 
-    def juliacompleter(token=None):
+    def _juliacompleter(token=None):
         oldcursposy, oldcursposx = vim.current.window.cursor
         thisline = vim.current.line
         #if not token:
@@ -67,7 +67,7 @@ try:
         completions = [] 
         try:
             jcompstr = 'jcompletions = REPL.REPLCompletions.completions("' + token +  '", ' + str(len(token)) + '); [string(jcompletions[1][i].mod) for i = 1:length(jcompletions[1])  ]'
-            jcomps = jumain.eval(jcompstr)
+            jcomps = _jumain.eval(jcompstr)
             if token[-1] == '.':
                 jcomps = [token + jc for jc in jcomps]
             completions += jcomps
@@ -77,7 +77,7 @@ try:
 
     languagemgr.langlist.append("julia")
     languagemgr.langevals.append(_jeval)
-    languagemgr.langcompleters.append(juliacompleter)
+    languagemgr.langcompleters.append(_juliacompleter)
 
 except Exception as e:
     print('julia bridge not installed or working')
