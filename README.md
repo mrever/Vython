@@ -39,14 +39,14 @@ For python (or sage or coconut):
   
   
 
-<c-]> hy  
-<m-]> javascript  
-<m-\> julia  
+\<c-]\> hy  
+\<m-]\> javascript  
+\<m-\\\> julia  
 \<m-/\> lua  
-<m-;> octave  
-<m-'> R  
-<m-enter> vimscript  
-<m-w> wolfram  
+\<m-;\> octave  
+\<m-'\> R  
+\<m-enter\> vimscript  
+\<m-w\> wolfram  
   
 \<c-u\>     ---get completions (if in insert mode)  
 \<c-b\>     ---try to evaluate expression in line, or stuff before = (i.e., if the line has x = 2, will output the CURRENT value of x, which may or may not be defined)  
