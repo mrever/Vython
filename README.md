@@ -32,10 +32,25 @@ Default bindings/commands:
 :Volyglot   ---initialize Volyglot, create new pane/buffer for outputs  
 \<F10\>     ---same as above  
   
+For python (or sage or coconut):   
 \<F5\>      ---execute entire file  
-\<s-enter\> ---execute current line or selected region (if in visual mode)  
-\<c-b\>     ---try to evaluate expression in line, or stuff before = (i.e., if the line has x = 2, will output the CURRENT value of x, which may or may not be defined)  
+\<s-enter\> ---execute current line (normal, insert modes) )or selected region (if in visual mode)  
+\<c-\\>     ---same as above, friendlier for terminals  
+  
+  
+
+<c-]> hy  
+<m-]> javascript  
+<m-\> julia  
+<m-/> lua  
+<m-;> octave  
+<m-'> R  
+<m-enter> vimscript  
+<m-w> wolfram  
   
 \<c-u\>     ---get completions (if in insert mode)  
+\<c-b\>     ---try to evaluate expression in line, or stuff before = (i.e., if the line has x = 2, will output the CURRENT value of x, which may or may not be defined)  
+
+
 
 Demo/tutorial is in the works.
