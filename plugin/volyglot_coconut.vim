@@ -32,6 +32,8 @@ try:
         #try:
         if _coconut_On_:
             parsedout = cocoparse('\n'.join(code))
+            if _sage_On_:
+                parsedout = sageparse(parsedout)
         else:
             parsedout = ('\n'.join(code))
         #except:
