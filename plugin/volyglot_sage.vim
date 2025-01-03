@@ -1,9 +1,9 @@
 command! Sage normal :call Sage()<cr>
-command! Sageoff normal :py3 _sage_On_ = False<cr>
+command! Sageoff normal :py3 voly.sage_On = False<cr>
 
 func! Sage()
 py3 << EOL
-_sage_On_ = True
+voly.sage_On = True
 try:
     from sage.all import *
     def _sageparse(sagestr):
@@ -17,20 +17,20 @@ try:
     languagemgr.langlist.append("sage")
     languagemgr.langevals.append(sage_eval)
 
-    def filtcode():
-        global _sage_On_
+    def _sagefiltcode():
         voly.removeindent()
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
         code = [q for q in code if q and len(q.strip())>0 and q.strip()[0]!='!']
         #try:
         parsedout = '\n'.join(code)
-        if _coconut_On_:
-            parsedout = cocoparse(parsedout)
-        if _sage_On_:
+        if voly.coconut_On:
+            parsedout = _cocoparse(parsedout)
+        if voly.sage_On:
             parsedout = _sageparse(parsedout)
         #except:
             #parsedout = ('\n'.join(code))
         return parsedout
+    voly.filtcode = _sagefiltcode
 except:
     _sageparse = lambda x: x
     print('sage not installed')

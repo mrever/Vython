@@ -1,9 +1,9 @@
 command! Coconut normal :call Coconut()<cr>
-command! Coconutoff normal :py3 _coconut_On_ = False<cr>
+command! Coconutoff normal :py3 voly.coconut_On = False<cr>
 
 func! Coconut()
 py3 << EOL
-_coconut_On_ = True
+voly.coconut_On = True
 try:
     import sys as _coconut_sys
     from coconut.__coconut__ import *
@@ -24,21 +24,21 @@ try:
         languagemgr.langcompleters = []
     languagemgr.langlist.append("coconut")
 
-    def filtcode():
-        global _coconut_On_
+    def _cocofiltcode():
         voly.removeindent()
         code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
         code = [q for q in code if q and len(q.strip())>0 and q.strip()[0]!='!']
         #try:
-        if _coconut_On_:
+        if voly.coconut_On:
             parsedout = _cocoparse('\n'.join(code))
-            if _sage_On_:
-                parsedout = sageparse(parsedout)
+            if voly.sage_On:
+                parsedout = _sageparse(parsedout)
         else:
             parsedout = ('\n'.join(code))
         #except:
             #parsedout = ('\n'.join(code))
         return parsedout
+    voly.filtcode = _cocofiltcode
 except:
     _cocoparse = lambda x: x
     print('coconut not installed')

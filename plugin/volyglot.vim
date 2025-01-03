@@ -10,17 +10,17 @@ nnoremap <silent> <F10> :vsp<enter><c-w><c-l>:e ~/pythonbuff.py<cr>:call Volyglo
 
 func! Volyglotload()
 
-nnoremap <silent> <F5>      mPggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <F5> <esc>mPggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <F5> mP<esc>ggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <F5>      mPggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <F5> <esc>mPggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <F5> mP<esc>ggVG"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
-nnoremap <silent> <s-enter>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <s-enter> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <s-enter>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <s-enter>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <s-enter> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <s-enter>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 "alternate mappings for terminal/ssh usage
-nnoremap <silent> <c-\>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
-inoremap <silent> <c-\> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
-vnoremap <silent> <c-\>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+nnoremap <silent> <c-\>      mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+inoremap <silent> <c-\> <esc>mPV"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`Pa
+vnoremap <silent> <c-\>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(voly.filtcode())<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 nnoremap <silent> <c-b>      mPV"py:py3 voly.printexp()<cr>`P
 inoremap <silent> <c-b> <esc>mPV"py:py3 voly.printexp()<cr>`Pa
@@ -30,7 +30,7 @@ nmap <m-b> <c-b>
 imap <m-b> <c-b>
 vmap <m-b> <c-b>
 
-vnoremap <silent> <F1>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(f'help({filtcode()})')<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
+vnoremap <silent> <F1>       mP"py:py3 voly.output()<cr>:redir @b<cr>:py3 exec(f'help({_origfiltcode()})')<cr>:redir END<cr>:py3 voly.smartprint(vim.eval("@b"))<cr>`P
 
 nnoremap <silent> <F8> mP{V}"py:py3 voly.readtable()<cr>`P
 vnoremap <silent> <F8> mP"py:py3 voly.readtable()<cr>`P
@@ -101,16 +101,15 @@ if os.getcwd().lower() == 'C:\\WINDOWS\\system32'.lower():
     os.chdir(os.path.expanduser('~'))
 
 
-if 'filtcode' not in globals():
-    def filtcode():
-        voly.removeindent()
-        code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
-        code = [q for q in code if q and len(q.strip())>0 and q.strip()[0]!='!']
-        #try:
-        parsedout = ('\n'.join(code))
-        #except:
-            #parsedout = ('\n'.join(code))
-        return parsedout
+def _origfiltcode():
+    voly.removeindent()
+    code = [q for q in vim.eval("@p").split('\n') if q and len(q)>0]
+    code = [q for q in code if q and len(q.strip())>0 and q.strip()[0]!='!']
+    #try:
+    parsedout = ('\n'.join(code))
+    #except:
+        #parsedout = ('\n'.join(code))
+    return parsedout
 
 
 class voly_outputter():
@@ -129,6 +128,8 @@ class voly_outputter():
         vyself.outhtml = False
         vyself.htmlbuff = []
         vyself.selenium = False
+        vyself.coconut_On = False
+        vyself.sage_On = False
         try:
             from completer import IPCompleter # requires IPython; will use simpler rlcompleter if not available
             vyself.icomplete = True
@@ -390,6 +391,7 @@ def print(*args, **kwargs):
     vim.command('redraw')
 
 voly = voly_outputter()
+voly.filtcode = _origfiltcode
 
 
 
