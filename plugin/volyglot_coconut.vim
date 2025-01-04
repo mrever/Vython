@@ -1,5 +1,5 @@
 command! Coconut normal :call Coconut()<cr>
-command! Coconutoff normal :py3 voly.coconut_On = False<cr>
+command! Coconutoff normal :py3 voly.coconut_On = False; voly.filtcode = _origfiltcode<cr>
 
 func! Coconut()
 py3 << EOL
@@ -12,7 +12,7 @@ try:
     def _cocoparse(cocostr):
         cocolines = cocostr.split('\n')
         for idx, line in enumerate(cocolines):
-            if 'import ' in line:
+            if line.strip()[-1] != '\\':
                 cocolines[idx] += ' # noqa '
         cocolinesout = _cocoparsetemp('\n'.join(cocolines)).split('\n')[6:]
         return '\n'.join(cocolinesout)
@@ -39,6 +39,7 @@ try:
             #parsedout = ('\n'.join(code))
         return parsedout
     voly.filtcode = _cocofiltcode
+    print = voly._printbak
 except:
     _cocoparse = lambda x: x
     print('coconut not installed')

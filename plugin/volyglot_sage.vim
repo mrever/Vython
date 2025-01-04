@@ -1,5 +1,5 @@
 command! Sage normal :call Sage()<cr>
-command! Sageoff normal :py3 voly.sage_On = False<cr>
+command! Sageoff normal :py3 voly.sage_On = False; voly.filtcode = _origfiltcode<cr>
 
 func! Sage()
 py3 << EOL
@@ -31,6 +31,7 @@ try:
             #parsedout = ('\n'.join(code))
         return parsedout
     voly.filtcode = _sagefiltcode
+    print = voly._printbak
 except:
     _sageparse = lambda x: x
     print('sage not installed')

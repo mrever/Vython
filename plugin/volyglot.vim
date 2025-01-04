@@ -392,6 +392,7 @@ def print(*args, **kwargs):
 
 voly = voly_outputter()
 voly.filtcode = _origfiltcode
+voly._printbak = print
 
 
 
